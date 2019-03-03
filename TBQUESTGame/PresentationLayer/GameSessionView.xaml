@@ -1,0 +1,344 @@
+﻿<Window x:Class="TBQUESTGame.PresentationLayer.GameSessionView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TBQUESTGame.PresentationLayer"
+        mc:Ignorable="d"
+        Title="GameSessionView" 
+        Height="450" 
+        Width="800"
+        Background="CornflowerBlue">
+    <Window.Resources>
+        <Style x:Key="BorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="10"/>
+        </Style>
+        <Style x:Key="MainGameTextBox" TargetType="TextBox">
+            <Setter Property="Foreground" Value="Honeydew"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Padding" Value="3,0,0,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Cornsilk"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border 
+                            Background="{TemplateBinding Background}"   
+                            x:Name="Bd" 
+                            BorderBrush="Black"  
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="5">
+                            <ScrollViewer Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="InsideBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+        <Style x:Key="IndividualLabelStyle" TargetType="Label">
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="125"/>
+            <Setter Property="Background" Value="Aquamarine"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="SpecificLabelStyle" TargetType="Label">
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Width" Value="170"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="Aquamarine"/>
+
+
+        </Style>
+        <Style x:Key="SpecificGameTextBox" TargetType="TextBox">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="3,0,0,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Cornsilk"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border 
+                            Background="{TemplateBinding Background}"   
+                            x:Name="Bd" 
+                            BorderBrush="Black"  
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="5">
+                            <ScrollViewer Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Border
+            Margin="10"
+            Style="{StaticResource BorderStyle}">
+            <Grid
+                Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height=".1*"/>
+                    <RowDefinition Height="1.2*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Height="20"
+                    Width="80"
+                    HorizontalAlignment="Left"
+                    Content="Create Player"/>
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Height="20"
+                    Width="80"
+                    HorizontalAlignment="Right"
+                    Content="Exit" Click="Button_Click"/>
+                <TextBox
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="3"
+                    Height="300"
+                    Width="525"
+                    Style="{StaticResource MainGameTextBox}"
+                    Text="Binding Game Text Here"/>
+
+                <Grid
+                    Grid.Row="1"
+                    Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label                        
+                        Grid.Row="0"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource IndividualLabelStyle}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Content="{Binding Player.Name}"/>
+                    <Label                        
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Style="{StaticResource IndividualLabelStyle}"
+                        HorizontalAlignment="Right"
+                        Content="Hit Points"/>
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Style="{StaticResource SpecificGameTextBox}"
+                        Text="{Binding Player.HitPoints}"/>
+                    <Label                        
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Style="{StaticResource IndividualLabelStyle}"
+                        HorizontalAlignment="Right"
+                        Content="Gold"/>
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Style="{StaticResource SpecificGameTextBox}"
+                        Text="{Binding Player.Gold}"/>
+                    <Label                        
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Style="{StaticResource IndividualLabelStyle}"
+                        HorizontalAlignment="Right"
+                        Content="Weapon Carried"/>
+                    <TextBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Style="{StaticResource SpecificGameTextBox}"
+                        Text="{Binding Player.WeaponCarried}"/>
+                    <Label                        
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        Style="{StaticResource IndividualLabelStyle}"
+                        HorizontalAlignment="Right"
+                        Content="Item Carried"/>
+                    <TextBox
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        Style="{StaticResource SpecificGameTextBox}"
+                        Text="{Binding Player.ItemCarried}"/>
+                    <Label                        
+                        Grid.Row="5"
+                        Grid.Column="0"
+                        Style="{StaticResource IndividualLabelStyle}"
+                        HorizontalAlignment="Right"
+                        Content="Lives"/>
+                    <TextBox
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        Style="{StaticResource SpecificGameTextBox}"
+                        Text="{Binding Player.Lives}"/>
+
+
+
+                </Grid>
+                <StackPanel
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Orientation="Horizontal">
+                    <Grid
+                        Width="285"
+                        Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            Grid.ColumnSpan="2"
+                            Style="{StaticResource SpecificLabelStyle}"
+                            Content="Player Movement"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Center"
+                            Background="Aquamarine"/>
+                        <Button
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            Width="85"
+                            Height="35"
+                            Content="Up"/>
+                        <Button
+                            Grid.Row="2"
+                            Grid.Column="0"
+                             Width="85"
+                            Height="35"
+                            Content="Left"/>
+                        <Button
+                            Grid.Row="2"
+                            Grid.Column="1"
+                             Width="85"
+                            Height="35"
+                            Content="Right"/>
+                        <Button
+                            Grid.Row="3"
+                            Grid.ColumnSpan="2"
+                             Width="85"
+                            Height="35"
+                            Content="Right"/>
+                    </Grid>
+
+                    <Grid
+                    Grid.Row="0"
+                    Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label                        
+                        Grid.Row="0"
+                        Grid.ColumnSpan="2"
+                        Style="{StaticResource SpecificLabelStyle}"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Center"
+                        Content="Back Pack Inventory"/>
+                        <Label                        
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Style="{StaticResource IndividualLabelStyle}"
+                        HorizontalAlignment="Right"
+                        Content="Item 1"/>
+                        <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Style="{StaticResource SpecificGameTextBox}"/>
+                        <Label                        
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Style="{StaticResource IndividualLabelStyle}"
+                        HorizontalAlignment="Right"
+                        Content="Item 2"/>
+                        <TextBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Style="{StaticResource SpecificGameTextBox}"/>
+                        <Label                        
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Style="{StaticResource IndividualLabelStyle}"
+                        HorizontalAlignment="Right"
+                        Content="Item 3"/>
+                        <TextBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Style="{StaticResource SpecificGameTextBox}"/>
+                        <Label                        
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        Style="{StaticResource IndividualLabelStyle}"
+                        HorizontalAlignment="Right"
+                        Content="Item 4"/>
+                        <TextBox
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        Style="{StaticResource SpecificGameTextBox}"/>
+                        <Label                        
+                        Grid.Row="5"
+                        Grid.Column="0"
+                        Style="{StaticResource IndividualLabelStyle}"
+                        HorizontalAlignment="Right"
+                        Content="Item 5"/>
+                        <TextBox
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        Style="{StaticResource SpecificGameTextBox}"/>
+
+                    </Grid>
+
+
+                </StackPanel>
+                <Image
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Height="250"
+                    Width="275"/>
+            </Grid>
+        </Border>
+    </Grid>
+
+</Window>
