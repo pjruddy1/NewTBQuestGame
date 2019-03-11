@@ -7,7 +7,7 @@ using TBQUESTGame.Models;
 
 namespace TBQUESTGame.DataLayer
 {
-    public class GameData
+    public static class GameData
     {
         public static Player PlayerData()
         {
@@ -18,7 +18,8 @@ namespace TBQUESTGame.DataLayer
                 Lives = 5,
                 Gold = 25,
                 WeaponCarried = Player.Items.BowieKnife,
-                ItemCarried = Player.Items.Rope
+                ItemCarried = Player.Items.Rope,
+                
             };
         }
 

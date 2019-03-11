@@ -12,7 +12,7 @@ namespace TBQUESTGame.BusinessLayer
     public class GameBusiness
     {
         GameSessionViewModel _gameSessionViewModel;
-        bool _newPlayer = false; // assume player is new for this sprint
+        bool _newPlayer = true; 
         Player _player = new Player();
         PlayerSetupView _playerSetupView = null;
 
@@ -37,6 +37,9 @@ namespace TBQUESTGame.BusinessLayer
                 //
                 _player.HitPoints = 100;
                 _player.Lives = 5;
+                _player.ExpierencePnts = 0;
+                _player.Gold = 50;
+                _player.ItemCarried = Character.Items.Rope;
             }
             else
             {
@@ -52,13 +55,13 @@ namespace TBQUESTGame.BusinessLayer
             //
             // instantiate the view model and initialize the data set
             //
-            _gameSessionViewModel = new GameSessionViewModel(
-                _player, GameData.InitialMessages());
+            _gameSessionViewModel = new GameSessionViewModel(_player, GameData.InitialMessages());
             GameSessionView gameSessionView = new GameSessionView(_gameSessionViewModel);
 
             gameSessionView.DataContext = _gameSessionViewModel;
 
             gameSessionView.Show();
+            _playerSetupView.Close();
         }
     }
 }

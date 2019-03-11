@@ -10,7 +10,6 @@ namespace TBQUESTGame.PresentationLayer
     public class GameSessionViewModel
     {
         private DateTime _gameStartTime;
-
         private Player _player;
         private List<string> _messages;
 
@@ -19,10 +18,12 @@ namespace TBQUESTGame.PresentationLayer
             get { return _player; }
             set { _player = value; }
         }
+
         public string MessageDisplay
         {
             get { return FormatMessagesForViewer(); }
         }
+
         public GameSessionViewModel()
         {
 
@@ -34,8 +35,6 @@ namespace TBQUESTGame.PresentationLayer
         {
             _player = player;
             _messages = initialMessages;
-
-
             InitializeView();
         }
 
