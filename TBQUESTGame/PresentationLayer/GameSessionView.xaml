@@ -9,14 +9,14 @@
         Height="650" 
         Width="900"
         Background="CornflowerBlue">
-    <Window.Resources>
+    <Window.Resources>        
         <Style x:Key="BorderStyle" TargetType="Border">
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="10"/>
         </Style>
         <Style x:Key="MainGameTextBox" TargetType="TextBox">
-            <Setter Property="Foreground" Value="Honeydew"/>
+            <Setter Property="Foreground" Value="Black"/>
             <Setter Property="Width" Value="100"/>
             <Setter Property="Height" Value="20"/>
             <Setter Property="Padding" Value="3,0,0,0"/>
@@ -64,14 +64,14 @@
             <Setter Property="Background" Value="Aquamarine"/>
         </Style>
         <Style x:Key="TextBoxLabelStyle" TargetType="Label">
-                <Setter Property="BorderBrush" Value="Black"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="FontSize" Value="10"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                <Setter Property="Width" Value="170"/>
-                <Setter Property="Height" Value="16"/>
-                <Setter Property="Background" Value="Aquamarine"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Width" Value="170"/>
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="Background" Value="Aquamarine"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
 
@@ -120,7 +120,7 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     Orientation="Horizontal">
-                    
+
                     <Button                    
                         Height="20"
                         Width="80"
@@ -131,12 +131,12 @@
                         Height="20"
                         Width="80"
                         HorizontalAlignment="Right"
-                        Content="Time Stamp Here"
+                        Content="{Binding GameStartTime, Mode=OneWay}"
                         FontSize="8"
                         Background="Gainsboro"
                         />
                 </StackPanel>
-                
+
                 <Button
                     Grid.Row="0"
                     Grid.Column="1"
@@ -148,37 +148,74 @@
                     Style="{StaticResource InsideBorderStyle}"
                     Grid.Row="1"
                     Grid.Column="0" HorizontalAlignment="Left" Width="563">
-                    <StackPanel>
-                        <Label
+                    <Grid>
+                        <StackPanel>
+                            <Label                            
                             Margin="20,3,0,2"
-                            Content="Location Discription"
-                            Style="{StaticResource TextBoxLabelStyle}"/>
-                        <TextBox
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Height="175"
-                    Width="525"
-                    Style="{StaticResource MainGameTextBox}"
-                    Text="{Binding GameData.InitialMessages}"/>
-                        <Label
+                            Content="Player Messages"
+                            Style="{StaticResource TextBoxLabelStyle}" 
+                            Height="28"/>
+                            <TextBox
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Height="67"
+                                Width="525"                                
+                                TextWrapping="Wrap"
+                                VerticalScrollBarVisibility="Auto"
+                                Style="{StaticResource MainGameTextBox}"
+                                Text="{Binding MessageDisplay, Mode=OneWay}" Margin="17,0"/>
+                            <Label
                             Margin="20,3,0,2"
-                            Content="Character Discription"
-                            Style="{StaticResource TextBoxLabelStyle}"/>
-                        <TextBox
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Height="75"
-                    Width="525"
-                    Style="{StaticResource MainGameTextBox}"
-                    Text="{Binding GameData.InitialMessages}"/>
-                    </StackPanel>
-                    
+                            Content="{Binding CurrentLocation.Name}"
+                            Style="{StaticResource TextBoxLabelStyle}" 
+                                Height="28"/>
+                            <TextBox
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Height="65"
+                                Width="525"
+                                TextWrapping="Wrap"
+                                VerticalScrollBarVisibility="Auto"
+                                Style="{StaticResource MainGameTextBox}"
+                                Text="{Binding CurrentLocation.Description}" Margin="17,0"/>
+                            <Label
+                                Margin="20,3,0,2"
+                                Content="Available Locations"
+                                Style="{StaticResource TextBoxLabelStyle}" 
+                                Height="28"/>
+                            <ListBox
+	                            Width="525"
+                                Height="65"
+                                Background="Cornsilk"
+                                BorderBrush="Black"
+	                            ItemsSource="{Binding AccessibleLocations}"
+	                            SelectedItem="{Binding CurrentLocationName}">
+                                    <!--<ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel 
+                                                Orientation="Horizontal" 
+                                                Margin="0">
+                                                <Label 
+					                            Content="{Binding Name}"                                                    
+					                            ContentStringFormat="Name: {0}"/>
+                                                <TextBox 
+					                                Text="{Binding Accessible, StringFormat='\{0\}'}" 
+                                                    Style="{StaticResource SpecificGameTextBox}"
+					                                Width="Auto"/>
+                                            </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>-->
+                            </ListBox>
+                        </StackPanel>
+                    </Grid>
+
+
                 </Border>
-               
+
                 <Border Grid.Row="1"
                     Grid.Column="2"
                         Style="{StaticResource InsideBorderStyle}">
@@ -270,13 +307,10 @@
                         Grid.Row="6"
                         Grid.Column="1"
                         Style="{StaticResource SpecificGameTextBox}"
-                        Text="{Binding Player.ExpierencePnts}"/>
-
-
-
+                        Text="{Binding ExpierencePnts}"/>
                     </Grid>
                 </Border>
-               
+
                 <StackPanel
                     Grid.Row="2"
                     Grid.Column="0"
@@ -406,7 +440,7 @@
 
                         </Grid>
                     </Border>
-                   
+
 
 
                 </StackPanel>
@@ -420,7 +454,7 @@
                     Height="250"
                     Width="275"/>
                 </Border>
-                
+
             </Grid>
         </Border>
     </Grid>

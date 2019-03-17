@@ -52,6 +52,8 @@
             <Setter Property="Height" Value="30"/>
             <Setter Property="Padding" Value="3,0,0,0"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="Background" Value="Cornsilk"/>
             <Setter Property="Template">
                 <Setter.Value>

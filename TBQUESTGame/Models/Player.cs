@@ -8,18 +8,22 @@ namespace TBQUESTGame.Models
 {
     public class Player : Character
     {
-        private int _expierencePnts;
-        private int _lives;
-        private Items _backPackItem1;
-        private Items _backPackItem2;
-        private Items _backPackItem3;
-        private Items _backPackItem4;
-        private Items _backPackItem5;
+        protected int _expierencePnts;
+        protected int _lives;
+        protected Items _backPackItem1;
+        protected Items _backPackItem2;
+        protected Items _backPackItem3;
+        protected Items _backPackItem4;
+        protected Items _backPackItem5;
 
         public int ExpierencePnts
         {
             get { return _expierencePnts; }
-            set { _expierencePnts = value; }
+            set
+            {
+                _expierencePnts = value;
+                //OnPropertyChanged(nameof(ExpierencePnts));
+            }
         }
 
         public int Lives

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TBQUESTGame.Models
 {
-    public class Character
+    public class Character : ObservableObject
     {
         public enum Items
         {
