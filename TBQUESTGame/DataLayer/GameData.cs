@@ -156,8 +156,10 @@ namespace TBQUESTGame.DataLayer
                 Accessible = false,
                 ModifiyExperiencePoints = 50,
                 RequiredExperiencePoints = 70,
-                Message = "\tIf you are not carrying a weapon in hand, you should either turn around or pull a weapon out.",
-                ImageName = "/media/sanMateo.jpg"
+                Message = "\tIf you are not carrying a weapon in hand, you should either turn around or pull a weapon out.  Because you were not prepared you've lost" +
+                "a life",
+                ImageName = "/media/sanMateo.jpg",
+                ModifyLives = -1
             };
             //
             //Row 4

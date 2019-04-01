@@ -39,7 +39,7 @@ namespace TBQUESTGame.Models
             set
             {
                _lives = value;
-                //OnPropertyChanged(nameof(Lives));
+                OnPropertyChanged(nameof(Lives));
             }
         }
 
