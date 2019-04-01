@@ -109,6 +109,17 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="media\airport.jpg" />
+    <Resource Include="media\bocaDelRio.jpg" />
+    <Resource Include="media\emptyBeach.jpg" />
+    <Resource Include="media\market.jpg" />
+    <Resource Include="media\palmBeach.jpg" />
+    <Resource Include="media\palms.jpg" />
+    <Resource Include="media\palmsRoom.jpg" />
+    <Resource Include="media\police.jpg" />
+    <Resource Include="media\sanMateo.jpg" />
+    <Resource Include="media\secretBeach.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

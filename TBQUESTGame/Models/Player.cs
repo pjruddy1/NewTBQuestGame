@@ -15,6 +15,13 @@ namespace TBQUESTGame.Models
         protected Items _backPackItem3;
         protected Items _backPackItem4;
         protected Items _backPackItem5;
+        private List<Location> _locationsVisited;
+
+        public List<Location> LocationsVisited
+        {
+            get { return _locationsVisited; }
+            set { _locationsVisited = value; }
+        }
 
         public int ExpierencePnts
         {
@@ -22,14 +29,18 @@ namespace TBQUESTGame.Models
             set
             {
                 _expierencePnts = value;
-                //OnPropertyChanged(nameof(ExpierencePnts));
+               OnPropertyChanged(nameof(ExpierencePnts));
             }
         }
 
         public int Lives
         {
             get { return _lives; }
-            set { _lives = value; }
+            set
+            {
+               _lives = value;
+                //OnPropertyChanged(nameof(Lives));
+            }
         }
 
         public Items BackPackItem5
@@ -62,14 +73,21 @@ namespace TBQUESTGame.Models
             set { _backPackItem1 = value; }
         }
 
+        public Player()
+        {
+            _locationsVisited = new List<Location>();
+        }
+
         public override string DefaultGreeting()
         {
             return base.DefaultGreeting();
         }
 
-        public Player()
+        public bool HasVisited(Location location)
         {
-
+            return _locationsVisited.Contains(location);
         }
+
+        
     }
 }

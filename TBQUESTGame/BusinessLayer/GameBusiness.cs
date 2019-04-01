@@ -11,13 +11,16 @@ namespace TBQUESTGame.BusinessLayer
 {
     public class GameBusiness
     {
+        bool _newPlayer = false;
         GameSessionViewModel _gameSessionViewModel;
-        bool _newPlayer = true; 
+        
         Player _player = new Player();
         PlayerSetupView _playerSetupView = null;
-        List<string> _messages;
-        Map _gameMap;
-        Location _currentLocation;
+        //List<string> _messages;
+        //Map _gameMap;
+        //GameMapCoordinates _initialLocationCoordinates;
+        
+
 
         public GameBusiness()
         {
@@ -57,9 +60,6 @@ namespace TBQUESTGame.BusinessLayer
         private void InitializeDataSet()
         {
             _player = GameData.PlayerData();
-            _messages = GameData.InitialMessages();
-            _gameMap = GameData.GameMapData();
-            _currentLocation = GameData.InitialGameMapLocaiton();
         }
 
         /// <summary>
@@ -70,13 +70,20 @@ namespace TBQUESTGame.BusinessLayer
             //
             // instantiate the view model and initialize the data set
             //
-            _gameSessionViewModel = new GameSessionViewModel(_player, _messages, _gameMap, _currentLocation);
+            _gameSessionViewModel = new GameSessionViewModel(_player, GameData.GameMap(), GameData.InitialGameMapLocation());
             GameSessionView gameSessionView = new GameSessionView(_gameSessionViewModel);
 
             gameSessionView.DataContext = _gameSessionViewModel;
 
             gameSessionView.Show();
-            _playerSetupView.Close();
+
+            //
+            // dialog window is initially hidden to mitigate issue with
+            // main window closing after dialog window closes
+            //
+            // commented out because the player setup window is disabled
+            //
+            //_playerSetupView.Close();
         }
     }
 }

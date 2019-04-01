@@ -37,7 +37,28 @@ namespace TBQUESTGame.PresentationLayer
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Environment.Exit(0);
+            _gameSessionViewModel.CloseScreen();
+           
+        }
+
+        private void NorthTravelButton_Click(object sender, RoutedEventArgs e)
+        {
+            _gameSessionViewModel.MoveNorth();
+        }
+
+        private void EastTravelButton_Click(object sender, RoutedEventArgs e)
+        {
+            _gameSessionViewModel.MoveEast();
+        }
+
+        private void SouthTravelButton_Click(object sender, RoutedEventArgs e)
+        {
+            _gameSessionViewModel.MoveSouth();
+        }
+
+        private void WestTravelButton_Click(object sender, RoutedEventArgs e)
+        {            
+            _gameSessionViewModel.MoveWest();
         }
     }
 }

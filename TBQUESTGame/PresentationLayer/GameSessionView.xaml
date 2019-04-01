@@ -9,7 +9,8 @@
         Height="650" 
         Width="900"
         Background="CornflowerBlue">
-    <Window.Resources>        
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
         <Style x:Key="BorderStyle" TargetType="Border">
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="BorderThickness" Value="1"/>
@@ -184,7 +185,7 @@
                                 Text="{Binding CurrentLocation.Description}" Margin="17,0"/>
                             <Label
                                 Margin="20,3,0,2"
-                                Content="Available Locations"
+                                Content="Available Actions"
                                 Style="{StaticResource TextBoxLabelStyle}" 
                                 Height="28"/>
                             <ListBox
@@ -192,7 +193,7 @@
                                 Height="65"
                                 Background="Cornsilk"
                                 BorderBrush="Black"
-	                            ItemsSource="{Binding AccessibleLocations}"
+	                            ItemsSource="{Binding Location}"
 	                            SelectedItem="{Binding CurrentLocationName}">
                                     <!--<ListBox.ItemTemplate>
                                         <DataTemplate>
@@ -307,7 +308,7 @@
                         Grid.Row="6"
                         Grid.Column="1"
                         Style="{StaticResource SpecificGameTextBox}"
-                        Text="{Binding ExpierencePnts}"/>
+                        Text="{Binding Player.ExpierencePnts}"/>
                     </Grid>
                 </Border>
 
@@ -340,25 +341,33 @@
                             Grid.ColumnSpan="2"
                             Width="85"
                             Height="35"
-                            Content="Up"/>
+                            Content="{Binding NorthLocationName}"
+                            Visibility="{Binding HasNorthLocation, Converter={StaticResource BooleanToVisibility}}"
+                            Click="NorthTravelButton_Click"/>
                             <Button
                             Grid.Row="2"
                             Grid.Column="0"
                              Width="85"
                             Height="35"
-                            Content="Left"/>
+                            Content="{Binding WestLocationName}"
+                            Visibility="{Binding HasWestLocation, Converter={StaticResource BooleanToVisibility}}"
+                            Click="WestTravelButton_Click"/>
                             <Button
                             Grid.Row="2"
                             Grid.Column="1"
                              Width="85"
                             Height="35"
-                            Content="Right"/>
+                            Content="{Binding EastLocationName}"
+                            Visibility="{Binding HasEastLocation, Converter={StaticResource BooleanToVisibility}}"
+                            Click="EastTravelButton_Click"/>
                             <Button
                             Grid.Row="3"
                             Grid.ColumnSpan="2"
                              Width="85"
                             Height="35"
-                            Content="Right"/>
+                            Content="{Binding SouthLocationName}"
+                            Visibility="{Binding HasSouthLocation, Converter={StaticResource BooleanToVisibility}}"
+                            Click="SouthTravelButton_Click"/>
                         </Grid>
                     </Border>
 
@@ -452,7 +461,8 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     Height="250"
-                    Width="275"/>
+                    Width="275"
+                    Source="{Binding CurrentLocation.ImageName}"/>
                 </Border>
 
             </Grid>

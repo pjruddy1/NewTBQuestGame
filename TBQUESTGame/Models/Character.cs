@@ -47,7 +47,11 @@ namespace TBQUESTGame.Models
         public int HitPoints
         {
             get { return _hitPoints; }
-            set { _hitPoints = value; }
+            set
+            {
+                _hitPoints = value;
+                //OnPropertyChanged(nameof(HitPoints));
+            }
         }
 
         public string Name

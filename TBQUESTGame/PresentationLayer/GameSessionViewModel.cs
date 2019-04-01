@@ -10,19 +10,27 @@ namespace TBQUESTGame.PresentationLayer
 {
     public class GameSessionViewModel : ObservableObject
     {
+        #region ENUMS
+
+        #endregion
+
+        #region FIELDS
+
         private DateTime _gameStartTime;
+        private string _gameTimeDisplay;
+        private TimeSpan _gameTime;
+
         private Player _player;
-        private List<string> _messages;
+
         private Map _gameMap;
         private Location _currentLocation;
         private string _currentLocationName;
-        private ObservableCollection<Location> _accessibleLocations;
+        private Location _northLocation, _eastLocation, _southLocation, _westLocation;
+        private string _nothLocationName, _eastLocationName, _southLocationName, _westLocationName;
 
-        public DateTime GameStartTime
-        {
-            get { return _gameStartTime; }
-            set { _gameStartTime = value; }
-        }
+        #endregion
+
+        #region PROPERTIES
 
         public Player Player
         {
@@ -32,92 +40,377 @@ namespace TBQUESTGame.PresentationLayer
 
         public string MessageDisplay
         {
-            get { return FormatMessagesForViewer(); }
+            get { return _currentLocation.Message; }
         }
-
-        public Location CurrentLocation
-        {
-            get { return _currentLocation; }
-            set { _currentLocation = value; }
-        }
-
         public Map GameMap
         {
             get { return _gameMap; }
             set { _gameMap = value; }
         }
-
-        public string CurrentLocationName
+        public Location CurrentLocation
         {
-            get { return _currentLocationName; }
-            set {
-                _currentLocationName = value;
-                OnPlayMove();
+            get { return _currentLocation; }
+            set
+            {
+                _currentLocation = value;
                 OnPropertyChanged(nameof(CurrentLocation));
             }
         }
 
-        public ObservableCollection<Location> AccessibleLocations
+        public string CurrentLocationName
         {
-            get { return _accessibleLocations; }
-            set { _accessibleLocations = value; }
+            get { return _currentLocationName; }
+            set
+            {
+                _currentLocationName = value;
+                OnPropertyChanged(nameof(CurrentLocationName));
+            }
         }
+
+        public string NorthLocationName
+        {
+            get { return _nothLocationName; }
+            set
+            {
+                _nothLocationName = NorthLocation.Name;
+                OnPropertyChanged(nameof(NorthLocationName));
+            }
+        }
+
+        public string EastLocationName
+        {
+            get { return _eastLocationName; }
+            set
+            {
+                _eastLocationName = EastLocation.Name;
+                OnPropertyChanged(nameof(EastLocationName));
+            }
+        }
+
+        public string SouthLocationName
+        {
+            get { return _southLocationName; }
+            set
+            {
+                _southLocationName = SouthLocation.Name;
+                OnPropertyChanged(nameof(SouthLocationName));
+            }
+        }
+
+        public string WestLocationName
+        {
+            get { return _westLocationName; }
+            set
+            {
+                _westLocationName = WestLocation.Name;
+                OnPropertyChanged(nameof(WestLocationName));
+            }
+        }
+
+        //
+        // expose information about travel points from current location
+        //
+        public Location NorthLocation
+        {
+            get { return _northLocation; }
+            set
+            {
+                _northLocation = value;
+                OnPropertyChanged(nameof(NorthLocation));
+                OnPropertyChanged(nameof(HasNorthLocation));
+            }
+        }
+
+        public Location EastLocation
+        {
+            get { return _eastLocation; }
+            set
+            {
+                _eastLocation = value;
+                OnPropertyChanged(nameof(EastLocation));
+                OnPropertyChanged(nameof(HasEastLocation));
+            }
+        }
+
+        public Location SouthLocation
+        {
+            get { return _southLocation; }
+            set
+            {
+                _southLocation = value;
+                OnPropertyChanged(nameof(SouthLocation));
+                OnPropertyChanged(nameof(HasSouthLocation));
+            }
+        }
+
+        public Location WestLocation
+        {
+            get { return _westLocation; }
+            set
+            {
+                _westLocation = value;
+                OnPropertyChanged(nameof(WestLocation));
+                OnPropertyChanged(nameof(HasWestLocation));
+            }
+        }
+
+        public bool HasNorthLocation
+        {
+            get
+            {
+                if (NorthLocation != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        
+        //
+        // shortened code with same functionality as above
+        //
+        public bool HasEastLocation { get { return EastLocation != null; } }
+        public bool HasSouthLocation { get { return SouthLocation != null; } }
+        public bool HasWestLocation { get { return WestLocation != null; } }
+
+        public string MissionTimeDisplay
+        {
+            get { return _gameTimeDisplay; }
+            set
+            {
+                _gameTimeDisplay = value;
+                OnPropertyChanged(nameof(MissionTimeDisplay));
+            }
+        }
+
+        #endregion
+
+        #region CONSTRUCTORS
 
         public GameSessionViewModel()
         {
 
         }
 
-        public GameSessionViewModel(Player player, List<string> initialMessages, Map gameMap, Location currentLocation )
+        public GameSessionViewModel(
+            Player player,
+            Map gameMap,
+            GameMapCoordinates currentLocationCoordinates)
         {
             _player = player;
-            _messages = initialMessages;
+
             _gameMap = gameMap;
-            _currentLocation = currentLocation;
-            _accessibleLocations = _gameMap.AccessibleLocaitons();
+            _gameMap.CurrentLocationCoordinates = currentLocationCoordinates;
+            _currentLocation = _gameMap.CurrentLocation;
             InitializeView();
+
+            //GameTimer();
         }
 
-        private string FormatMessagesForViewer()
-        {
-            List<string> lifoMessages = new List<string>();
+        #endregion
 
-            for (int index = 0; index < _messages.Count; index++)
+        #region METHODS
+
+        /// <summary>
+        /// game time event, publishes every 1 second
+        /// </summary>
+        //public void GameTimer()
+        //{
+        //    DispatcherTimer timer = new DispatcherTimer();
+        //    timer.Interval = TimeSpan.FromMilliseconds(1000);
+        //    timer.Tick += OnGameTimerTick;
+        //    timer.Start();
+        //}
+
+        /// <summary>
+        /// calculate the available travel points from current location
+        /// game slipstreams are a mapping against the 2D array where 
+        /// </summary>
+        private void UpdateAvailableTravelPoints()
+        {
+            //
+            // reset travel location information
+            //
+            NorthLocation = null;
+            EastLocation = null;
+            SouthLocation = null;
+            WestLocation = null;
+
+            if (_gameMap.NorthLocation(_player) != null)
             {
-                lifoMessages.Add($" <T:{GameTime().ToString(@"hh\:mm\:ss")}> " + _messages[index]);
+                NorthLocation = _gameMap.NorthLocation(_player);
+                NorthLocationName = _gameMap.NorthLocationName(_player);
             }
 
-            lifoMessages.Reverse();
+            if (_gameMap.EastLocation(_player) != null)
+            {
+                EastLocation = _gameMap.EastLocation(_player);
+                EastLocationName = _gameMap.EastLocationName(_player);
+            }
 
-            return string.Join("\n\n", lifoMessages);
+            if (_gameMap.SouthLocation(_player) != null)
+            {
+                SouthLocation = _gameMap.SouthLocation(_player);
+                SouthLocationName = _gameMap.SouthLocationName(_player);
+            }
+
+            if (_gameMap.WestLocation(_player) != null)
+            {
+                WestLocation = _gameMap.WestLocation(_player);
+                WestLocationName = _gameMap.WestLocationName(_player);
+            }
         }
 
-        private void InitializeView()
+        /// <summary>
+        /// player move event handler
+        /// </summary>
+        private void OnPlayerMove()
         {
-            _gameStartTime = DateTime.Now;
+            //
+            // update player stats when in new location
+            //
+            if (!_player.HasVisited(_currentLocation))
+            {
+                //
+                // add location to list of visited locations
+                //
+                _player.LocationsVisited.Add(_currentLocation);
+
+                // 
+                // update experience points
+                //
+                _player.ExpierencePnts += _currentLocation.ModifiyExperiencePoints;
+
+                //
+                // update health
+                //
+                if (_currentLocation.ModifyHealth != 0)
+                {
+                    _player.HitPoints += _currentLocation.ModifyHealth;
+                    if (_player.HitPoints > 100)
+                    {
+                        _player.HitPoints = 100;
+                        _player.Lives++;
+                    }
+                }
+
+                //
+                // update lives
+                //
+                if (_currentLocation.ModifyLives != 0) _player.Lives += _currentLocation.ModifyLives;
+
+                //
+                // display a new message if available
+                //
+                OnPropertyChanged(nameof(MessageDisplay));
+            }
         }
 
+        /// <summary>
+        /// travel north
+        /// </summary>
+        public void MoveNorth()
+        {
+            if (HasNorthLocation)
+            {
+                _gameMap.MoveNorth();
+                CurrentLocation = _gameMap.CurrentLocation;
+                UpdateAvailableTravelPoints();
+                OnPlayerMove();
+            }
+        }
+
+        /// <summary>
+        /// travel east
+        /// </summary>
+        public void MoveEast()
+        {
+            if (HasEastLocation)
+            {
+                _gameMap.MoveEast();
+                CurrentLocation = _gameMap.CurrentLocation;
+                UpdateAvailableTravelPoints();
+                OnPlayerMove();
+            }
+        }
+
+        /// <summary>
+        /// travel south
+        /// </summary>
+        public void MoveSouth()
+        {
+            if (HasSouthLocation)
+            {
+                _gameMap.MoveSouth();
+                CurrentLocation = _gameMap.CurrentLocation;
+                UpdateAvailableTravelPoints();
+                OnPlayerMove();
+            }
+        }
+
+        /// <summary>
+        /// travel west
+        /// </summary>
+        public void MoveWest()
+        {
+            if (HasWestLocation)
+            {
+                _gameMap.MoveWest();
+                CurrentLocation = _gameMap.CurrentLocation;
+                UpdateAvailableTravelPoints();
+                OnPlayerMove();
+            }
+        }
+
+        #region GAME TIME METHODS
+
+        /// <summary>
+        /// running time of game
+        /// </summary>
+        /// <returns></returns>
         private TimeSpan GameTime()
         {
             return DateTime.Now - _gameStartTime;
         }
 
-        private void OnPlayMove()
+        /// <summary>
+        /// game timer event handler
+        /// 1) update mission time on window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnGameTimerTick(object sender, EventArgs e)
         {
-            Location newLocation = new Location();
-
-            foreach (Location location in AccessibleLocations)
-            {
-                if (location.Name == _currentLocationName)
-                {
-                    newLocation = location;
-                    _currentLocation = newLocation;
-                    _player.ExpierencePnts += _currentLocation.ModifiyExperiencePoints;
-                }
-            }
-
-            //Location newLocation = AccessibleLocations.FirstOrDefault(1 => 1.Name == _currentLocationName);
-            _gameMap.CurrentLocation = newLocation;
+            _gameTime = DateTime.Now - _gameStartTime;
+            MissionTimeDisplay = "Mission Time " + _gameTime.ToString(@"hh\:mm\:ss");
         }
+
+        /// <summary>
+        /// initial setup of the game session view
+        /// </summary>
+        private void InitializeView()
+        {
+            _gameStartTime = DateTime.Now;
+            UpdateAvailableTravelPoints();
+        }
+
+        public void CloseScreen()
+        {
+            Environment.Exit(0);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region EVENTS
+
+
+
+        #endregion
     }
 }
