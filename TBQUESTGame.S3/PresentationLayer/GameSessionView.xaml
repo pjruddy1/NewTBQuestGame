@@ -150,7 +150,17 @@
                     Grid.Row="1"
                     Grid.Column="0" HorizontalAlignment="Left" Width="563">
                     <Grid>
-                        <StackPanel>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel
+                            Grid.Row="0"
+                            Grid.Column="0">
                             <Label                            
                             Margin="20,3,0,2"
                             Content="Player Messages"
@@ -161,12 +171,16 @@
                                 HorizontalAlignment="Center"
                                 Grid.Row="1"
                                 Grid.Column="0"
-                                Height="45"
-                                Width="525"                                
+                                Height="110"
+                                Width="250"                                
                                 TextWrapping="Wrap"
                                 VerticalScrollBarVisibility="Auto"
                                 Style="{StaticResource MainGameTextBox}"
                                 Text="{Binding MessageDisplay, Mode=OneWay}" Margin="17,0"/>
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Row="0"
+                            Grid.Column="1">
                             <Label
                             Margin="20,3,0,2"
                             Content="{Binding CurrentLocation.Name}"
@@ -177,46 +191,61 @@
                                 HorizontalAlignment="Center"
                                 Grid.Row="1"
                                 Grid.Column="0"
-                                Height="55"
-                                Width="525"
+                                Height="110"
+                                Width="250"
                                 TextWrapping="Wrap"
                                 VerticalScrollBarVisibility="Auto"
                                 Style="{StaticResource MainGameTextBox}"
                                 Text="{Binding CurrentLocation.Description}" Margin="17,0"/>
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2">
                             <TabControl 
-                                    x:Name="LocationInfoTabControl"
-                                    Width="525">
-                                <TabItem Header="Items"
-                                        x:Name="ItemsInfoTabItem">
+                            x:Name="LocationDataTabControl"
+                            Width="auto">
+
+                                <TabItem Header="Booty"
+                                x:Name="BootyTabItem">
                                     <DataGrid 
-                                            x:Name="LocationItemsDataGrid"
-                                            Height="auto"
-                                            ItemsSource="{Binding CurrentLocation.GameItems}" 
-                                            SelectedItem="{Binding CurrentGameItem}"
-                                            AutoGenerateColumns="False"
-                                            HeadersVisibility="Column">
+                                    x:Name="BootyDataGrid"
+                                    ItemsSource="{Binding CurrentLocation.Booty}"
+                                    SelectedItem="{Binding CurrentBootyItem}"
+                                    AutoGenerateColumns="False"
+                                    HeadersVisibility="Column">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn 
-                                                    Header="Description" 
-                                                    IsReadOnly="True"                 
-                                                    Binding="{Binding GameItem.Information, Mode=OneWay}"
-                                                    Width="*">
-                                                <DataGridTextColumn.ElementStyle>
-                                                    <Style>
-                                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
-                                                    </Style>
-                                                </DataGridTextColumn.ElementStyle>
-                                            </DataGridTextColumn>
-                                            <DataGridTextColumn 
-                                                    Header="Qty"
-                                                    IsReadOnly="True"
-                                                    Width="Auto"
-                                                    Binding="{Binding Quantity, Mode=OneWay}"/>
+                                            <DataGridTextColumn Header="Name"
+                                                Binding="{Binding GameItem.ItemName, Mode=OneWay}"
+                                                Width="*"/>
+                                            <DataGridTextColumn Header="Qty"
+                                                IsReadOnly="True"
+                                                Width="Auto"
+                                                Binding="{Binding Quantity, Mode=OneWay}"/>
+                                           
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </TabItem>
+
+                                <TabItem Header="Items"
+                                x:Name="ItemsTabItem">
+                                    <DataGrid 
+                                    x:Name="ItemsDataGrid"
+                                    ItemsSource="{Binding CurrentLocation.GameItems}"
+                                    SelectedItem="{Binding CurrentGameItem}"
+                                    AutoGenerateColumns="False"
+                                    HeadersVisibility="Column">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Name"
+                                                Binding="{Binding GameItem.ItemName, Mode=OneWay}"
+                                                Width="*"/>
+                                            
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </TabItem>
+
                             </TabControl>
-                        </StackPanel>
+                        </StackPanel>                           
                     </Grid>
 
 
@@ -264,12 +293,12 @@
                         Grid.Column="0"
                         Style="{StaticResource IndividualLabelStyle}"
                         HorizontalAlignment="Right"
-                        Content="Gold"/>
+                        Content="Booty"/>
                         <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
                         Style="{StaticResource SpecificGameTextBox}"
-                        Text="{Binding Player.Gold}"/>
+                        Text="{Binding Player.BootyValue}"/>
                         <Label                        
                         Grid.Row="3"
                         Grid.Column="0"
@@ -330,19 +359,48 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.ColumnSpan="2"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                                <Button                            
+                            Width="85"
+                            Height="35"
+                            Margin="5"
+                            Content="Pick UP"
+                            Visibility="{Binding IsCurrentGameItemSelected, Converter={StaticResource BooleanToVisibility}}" Click="PickUpButton_Click_1"
+                            />
+                                <Button                           
+                            Width="85"
+                            Height="35"
+                            Content="Drop Item"
+                            Visibility="{Binding IsCurrentInventoryGameItemSelected, Converter={StaticResource BooleanToVisibility}}" Click="DropButton_Click_1"
+                            />
+                                <Button                            
+                            Width="85"
+                            Height="35"
+                            Margin="5"
+                            Content="Use Item"
+                            Visibility="{Binding IsCurrentInventoryGameItemSelected, Converter={StaticResource BooleanToVisibility}}"
+                            />
+                            </StackPanel>
                             <Label
+                                Grid.Row="1"
                             Grid.ColumnSpan="2"
                             Style="{StaticResource SpecificLabelStyle}"
                             Content="Player Movement"
                             VerticalAlignment="Bottom"                           
                             Background="Aquamarine"/>
                             <Button
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Grid.ColumnSpan="2"
                             Width="85"
                             Height="35"
@@ -350,7 +408,7 @@
                             Visibility="{Binding HasNorthLocation, Converter={StaticResource BooleanToVisibility}}"
                             Click="NorthTravelButton_Click"/>
                             <Button
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Grid.Column="0"
                              Width="85"
                             Height="35"
@@ -358,7 +416,7 @@
                             Visibility="{Binding HasWestLocation, Converter={StaticResource BooleanToVisibility}}"
                             Click="WestTravelButton_Click"/>
                             <Button
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Grid.Column="1"
                              Width="85"
                             Height="35"
@@ -366,7 +424,7 @@
                             Visibility="{Binding HasEastLocation, Converter={StaticResource BooleanToVisibility}}"
                             Click="EastTravelButton_Click"/>
                             <Button
-                            Grid.Row="3"
+                            Grid.Row="4"
                             Grid.ColumnSpan="2"
                              Width="85"
                             Height="35"
@@ -378,81 +436,75 @@
 
                     <Border
                         Style="{StaticResource InsideBorderStyle}" Width="275">
-                        <Grid
-                            HorizontalAlignment="Right"
-                            Margin="5"
-                            Grid.Row="0"
-                            Grid.Column="1" Width="259">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Label                        
-                        Grid.Row="0"
-                        Grid.ColumnSpan="2"
-                        Style="{StaticResource SpecificLabelStyle}"
-                        VerticalAlignment="Bottom"
-                        Content="Back Pack Inventory"/>
-                            <Label                        
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Style="{StaticResource IndividualLabelStyle}"
-                        HorizontalAlignment="Right"
-                        Content="Item 1"/>
-                            <TextBox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Style="{StaticResource SpecificGameTextBox}"/>
-                            <Label                        
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        Style="{StaticResource IndividualLabelStyle}"
-                        HorizontalAlignment="Right"
-                        Content="Item 2"/>
-                            <TextBox
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Style="{StaticResource SpecificGameTextBox}"/>
-                            <Label                        
-                        Grid.Row="3"
-                        Grid.Column="0"
-                        Style="{StaticResource IndividualLabelStyle}"
-                        HorizontalAlignment="Right"
-                        Content="Item 3"/>
-                            <TextBox
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Style="{StaticResource SpecificGameTextBox}"/>
-                            <Label                        
-                        Grid.Row="4"
-                        Grid.Column="0"
-                        Style="{StaticResource IndividualLabelStyle}"
-                        HorizontalAlignment="Right"
-                        Content="Item 4"/>
-                            <TextBox
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        Style="{StaticResource SpecificGameTextBox}"/>
-                            <Label                        
-                        Grid.Row="5"
-                        Grid.Column="0"
-                        Style="{StaticResource IndividualLabelStyle}"
-                        HorizontalAlignment="Right"
-                        Content="Item 5"/>
-                            <TextBox
-                        Grid.Row="5"
-                        Grid.Column="1"
-                        Style="{StaticResource SpecificGameTextBox}"/>
+                        <TabControl 
+                            x:Name="PlayerPackTabControl"
+                            Width="auto">
 
-                        </Grid>
+                            <TabItem Header="Tools"
+                                x:Name="ToolsTabItem">
+                                <DataGrid 
+                                    x:Name="ToolsDataGrid"
+                                    ItemsSource="{Binding Player.ActionItems}"
+                                    SelectedItem="{Binding CurrentGameItem}"
+                                    AutoGenerateColumns="False"
+                                    HeadersVisibility="Column" Height="223" VerticalAlignment="Bottom">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Name"
+                                                Binding="{Binding GameItems.ItemName, Mode=OneWay}"
+                                                Width="*"/>
+                                        <DataGridTextColumn Header="Description"
+                                                IsReadOnly="True"
+                                                Width="1.25*"
+                                                Binding="{Binding GameItem.Description, Mode=OneWay}"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </TabItem>
+
+                            <TabItem Header="Weapons"
+                                x:Name="WeaponsTabItem">
+                                <DataGrid 
+                                    x:Name="WeaponsDataGrid"
+                                    ItemsSource="{Binding Player.Weapons}"
+                                    SelectedItem="{Binding CurrentGameItem}"
+                                    AutoGenerateColumns="False"
+                                    HeadersVisibility="Column">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Name"
+                                                Binding="{Binding GameItem.Name, Mode=OneWay}"
+                                                Width="*"/>
+                                        <DataGridTextColumn Header="Description"
+                                                IsReadOnly="True"
+                                                Width="1.25*"
+                                                Binding="{Binding GameItem.Description, Mode=OneWay}"/>
+                                        
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </TabItem>
+
+                            <TabItem Header="Booty"
+                                x:Name="PlayerBootyTabItem">
+                                <DataGrid 
+                                    x:Name="TreasureDataGrid"
+                                    ItemsSource="{Binding Player.Purse}"
+                                    SelectedItem="{Binding CurrentGameItem}"
+                                    AutoGenerateColumns="False"
+                                    HeadersVisibility="Column">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Name"
+                                                Binding="{Binding GameItem.ItemName, Mode=OneWay}"
+                                                Width="*"/>
+                                        <DataGridTextColumn Header="Qty"
+                                                IsReadOnly="True"
+                                                Width="Auto"
+                                                Binding="{Binding Quantity, Mode=OneWay}"/>
+                                        <DataGridTextColumn Header="Value"
+                                                Binding="{Binding GameItem.CurrencyValue, Mode=OneWay}"
+                                                Width="Auto"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </TabItem>
+
+                        </TabControl>
                     </Border>
 
 
