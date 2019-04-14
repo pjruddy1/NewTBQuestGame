@@ -24,12 +24,12 @@ namespace TBQUESTGame.Models
         private int _modifiyExperiencePoints;
         private int _modifyHealth;
         private int _modifyLives;
-        private int _actionItemRequired;       
-
         private string _message;
         private string _imagename;
-        private ObservableCollection<GameItem> _gameItems;
+        private ObservableCollection<GameItemQuantity> _gameItems;
         private ObservableCollection<GameItemQuantity> _booty;
+        private List<GameItem> _weaponRequired;
+        private GameItemQuantity _actionItemRequired;
 
        
 
@@ -88,7 +88,7 @@ namespace TBQUESTGame.Models
             set { _modifyLives = value; }
         }
 
-        public int ActionItemRequired
+        public GameItemQuantity ActionItemRequired
         {
             get { return _actionItemRequired; }
             set { _actionItemRequired = value; }
@@ -106,8 +106,7 @@ namespace TBQUESTGame.Models
             set { _imagename = value; }
         }
 
-
-        public ObservableCollection<GameItem> GameItems
+        public ObservableCollection<GameItemQuantity> GameItems
         {
             get { return _gameItems; }
             set { _gameItems = value; }
@@ -119,13 +118,18 @@ namespace TBQUESTGame.Models
             set { _booty = value; }
         }
 
+        public List<GameItem> WeaponRequired
+        {
+            get { return _weaponRequired; }
+            set { _weaponRequired = value; }
+        }
+
         #endregion
 
         #region CONSTRUCTORS
         public Location()
-        {
-            _booty = new ObservableCollection<GameItemQuantity>();
-            _gameItems = new ObservableCollection<GameItem>();
+        {            
+            _gameItems = new ObservableCollection<GameItemQuantity>();
         }
         #endregion
 
@@ -135,40 +139,37 @@ namespace TBQUESTGame.Models
             return _name;
         }
 
+        #region GameItem Methods
+        /// <summary>
+        /// Used to update both GameItems and Booty
+        /// </summary>
         public void UpdateLocationGameItems()
         {
-            ObservableCollection<GameItem> updatedLocationGameItems = new ObservableCollection<GameItem>();
-            ObservableCollection<GameItemQuantity> UpdatedBooty = new ObservableCollection<GameItemQuantity>();
+            ObservableCollection<GameItemQuantity> updatedLocationGameItems = new ObservableCollection<GameItemQuantity>();
 
-            foreach (GameItem gameItem in _gameItems)
+            foreach (GameItemQuantity gameItemQuantity in _gameItems)
             {
-                
-                    updatedLocationGameItems.Add(gameItem);
-                
+                updatedLocationGameItems.Add(gameItemQuantity);
             }
-            foreach (GameItemQuantity gameItemQuantity in _booty)
-            {
-                UpdatedBooty.Add(gameItemQuantity);
-            }
-            Booty.Clear();
+
             GameItems.Clear();
 
-            foreach (GameItem gameItem in updatedLocationGameItems)
+            foreach (GameItemQuantity gameItemQuantity in updatedLocationGameItems)
             {
-                GameItems.Add(gameItem);
-            }
-            foreach (GameItemQuantity gameItemQuantity in UpdatedBooty)
-            {
-                Booty.Add(gameItemQuantity);
+                GameItems.Add(gameItemQuantity);
             }
         }
 
+        /// <summary>
+        /// Used to load booty to locatitons
+        /// </summary>
+        /// <param name="selectedGameItemQuantity"></param>
         public void AddGameItemQuantityToLocation(GameItemQuantity selectedGameItemQuantity)
         {
             //
             // locate selected item in location
             //
-            GameItemQuantity gameItemQuantity = _booty.FirstOrDefault(i => i.GameItem.ItemID == selectedGameItemQuantity.GameItem.ItemID);
+            GameItemQuantity gameItemQuantity = _gameItems.FirstOrDefault(i => i.GameItem.ItemID == selectedGameItemQuantity.GameItem.ItemID);
 
             if (gameItemQuantity == null)
             {
@@ -176,7 +177,7 @@ namespace TBQUESTGame.Models
                 newGameItemQuantity.GameItem = selectedGameItemQuantity.GameItem;
                 newGameItemQuantity.Quantity = 1;
 
-                _booty.Add(newGameItemQuantity);
+                _gameItems.Add(newGameItemQuantity);
             }
             else
             {
@@ -186,18 +187,22 @@ namespace TBQUESTGame.Models
             UpdateLocationGameItems();
         }
 
+        /// <summary>
+        /// Used to Remove Booty From Location
+        /// </summary>
+        /// <param name="selectedGameItemQuantity"></param>
         public void RemoveGameItemQuantityFromLocation(GameItemQuantity selectedGameItemQuantity)
         {
             //
             // locate selected item in location
             //
-            GameItemQuantity gameItemQuantity = _booty.FirstOrDefault(i => i.GameItem.ItemID == selectedGameItemQuantity.GameItem.ItemID);
+            GameItemQuantity gameItemQuantity = _gameItems.FirstOrDefault(i => i.GameItem.ItemID == selectedGameItemQuantity.GameItem.ItemID);
 
             if (gameItemQuantity != null)
             {
                 if (selectedGameItemQuantity.Quantity == 1)
                 {
-                    _booty.Remove(gameItemQuantity);
+                    _gameItems.Remove(gameItemQuantity);
                 }
                 else
                 {
@@ -207,27 +212,32 @@ namespace TBQUESTGame.Models
 
             UpdateLocationGameItems();
         }
+              
 
-        public void AddGameItemToLocation(GameItem selectedGameItem)
-        {
-            if (selectedGameItem.ItemID < 200 && selectedGameItem.ItemID > 300)
-            {
-                _gameItems.Add(selectedGameItem);
-                
-            }
-            UpdateLocationGameItems();
+        #endregion
+        //public bool IsAccessibleByWeaponCarried(GameItemQuantity WeaponCarried, List<GameItem> WeaponRequired)
+        //{
+        //    if (WeaponCarried != null)
+        //    {
+        //        foreach (GameItem weapon in WeaponRequired)
+        //        {
+        //            if (WeaponCarried.GameItem.ItemID == weapon.ItemID)
+        //            {
+        //                return true;
 
-        }
-
-        public void RemoveGameItemFromLocation(GameItem selectedGameItem)
-        {
-            if (selectedGameItem != null)
-            {
-                _gameItems.Remove(selectedGameItem);
-            }
-
-            UpdateLocationGameItems();
-        }
+        //            }
+        //            else
+        //            {
+        //                return false;
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+            
+        //}
 
         public bool IsAccessibleByExperiencePoints(int playerExperiencePoints)
         {

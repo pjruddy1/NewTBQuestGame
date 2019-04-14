@@ -9,19 +9,44 @@ namespace TBQUESTGame.Models
 {
     public class Player : Character
     {
+        #region Fields
         protected int _expierencePnts;
         protected int _lives;
         private int _bootyValue;        
         private List<GameItem> _backPackItems;        
         private List<Location> _locationsVisited;
         private ObservableCollection<GameItemQuantity> _booty;
-        private ObservableCollection<GameItem> _weapons;
-        private ObservableCollection<GameItem> _actionItems;
-        private ObservableCollection<GameItem> _Inventory;
-        private ObservableCollection<GameItemQuantity> _purse;       
+        private ObservableCollection<GameItemQuantity> _weapons;
+        private ObservableCollection<GameItemQuantity> _actionItems;
+        private ObservableCollection<GameItemQuantity> _Inventory;
+        private GameItemQuantity _weaponCarried;
+        private string _currentWeapon;
 
+        public string CurrentWeapon
+        {
+            get
+            {
+                if (WeaponCarried != null)
+                {
+                    _currentWeapon = WeaponCarried.GameItem.ItemName;
+                }
+                else
+                {
+                    _currentWeapon = "";
+                }
+                
+                return _currentWeapon;
+            }
+            set
+            {
+                _currentWeapon = value;
+                OnPropertyChanged(nameof(CurrentWeapon));
+            }
+        }
 
+        #endregion
 
+        #region Properties
         public List<GameItem> BackPackItems
         {
             get { return _backPackItems; }
@@ -43,7 +68,6 @@ namespace TBQUESTGame.Models
                OnPropertyChanged(nameof(ExpierencePnts));
             }
         }
-
 
         public int BootyValue
         {
@@ -71,96 +95,122 @@ namespace TBQUESTGame.Models
             set { _booty = value; }
         }
 
-        public ObservableCollection<GameItem> ActionItems
+        public ObservableCollection<GameItemQuantity> ActionItems
         {
             get { return _actionItems; }
             set { _actionItems = value; }
         }
 
-        public ObservableCollection<GameItem> Weapons
+        public ObservableCollection<GameItemQuantity> Weapons
         {
             get { return _weapons; }
             set { _weapons = value; }
         }
 
-        public ObservableCollection<GameItem> Inventory
+        public ObservableCollection<GameItemQuantity> Inventory
         {
             get { return _Inventory; }
             set { _Inventory = value; }
         }
-        public ObservableCollection<GameItemQuantity> Purse
-        {
-            get { return _purse; }
-            set { _purse = value; }
-        }
 
+        public GameItemQuantity WeaponCarried
+        {
+            get { return _weaponCarried; }
+            set
+            {
+                _weaponCarried = value;
+                OnPropertyChanged(nameof(WeaponCarried));
+            }
+        }
+        #endregion
+
+        #region Constructors
         public Player()
         {
             _locationsVisited = new List<Location>();
-            _backPackItems = new List<GameItem>();
+            _Inventory = new ObservableCollection<GameItemQuantity>();
             _booty = new ObservableCollection<GameItemQuantity>();
-            _weapons = new ObservableCollection<GameItem>();
-            _actionItems = new ObservableCollection<GameItem>();
-            _purse = new ObservableCollection<GameItemQuantity>();
+            _weapons = new ObservableCollection<GameItemQuantity>();
+            _actionItems = new ObservableCollection<GameItemQuantity>();            
+           
         }
+        #endregion
 
-        public void UpdateBackPackItems()
+        #region methods
+        public void UpdateInventoryCategories()
         {
            
             Weapons.Clear();
             ActionItems.Clear();
 
-            foreach (var gameItem in _Inventory)
+            foreach (var gameItemQuantity in _Inventory)
             {
-                if (gameItem is Weapon) Weapons.Add(gameItem);
-                if (gameItem is ActionItem) ActionItems.Add(gameItem);
-            }
-        }
-        public void UpdatePurse()
-        {
-            Booty.Clear();
-            foreach (var gameItemQuantity in _purse)
-            {
+                if (gameItemQuantity.GameItem is Weapon) Weapons.Add(gameItemQuantity);
+                if (gameItemQuantity.GameItem is ActionItem) ActionItems.Add(gameItemQuantity);
                 if (gameItemQuantity.GameItem is Currency) Booty.Add(gameItemQuantity);
             }
         }
 
-        public void AddBootyToPurse(GameItemQuantity selectedBootyQuantity)
-        {
-            GameItemQuantity gameItemQuantity = _booty.FirstOrDefault(i => i.GameItem.ItemID == selectedBootyQuantity.GameItem.ItemID);
 
-            if(gameItemQuantity == null)
+        public void AddGameItemQuantityToInventory(GameItemQuantity selectedGameItemQuantity)
+        {
+            //
+            // locate selected item in inventory
+            //
+            GameItemQuantity gameItemQuantity = _Inventory.FirstOrDefault(i => i.GameItem.ItemID == selectedGameItemQuantity.GameItem.ItemID);
+
+            if (gameItemQuantity == null)
             {
                 GameItemQuantity newGameItemQuantity = new GameItemQuantity();
-                newGameItemQuantity.GameItem = selectedBootyQuantity.GameItem;
+                newGameItemQuantity.GameItem = selectedGameItemQuantity.GameItem;
                 newGameItemQuantity.Quantity = 1;
 
-                _purse.Add(newGameItemQuantity);
+                _Inventory.Add(newGameItemQuantity);
             }
             else
             {
                 gameItemQuantity.Quantity++;
             }
-            UpdatePurse();
 
+            UpdateInventoryCategories();
         }
 
-        
-        public void AddGameItemToInv(GameItem selectedGameItem)
+
+        public void RemoveGameItemQuantityFromInventory(GameItemQuantity selectedGameItemQuantity)
         {
-            if(selectedGameItem != null)
+            //
+            // locate selected item in inventory
+            //
+            GameItemQuantity gameItemQuantity = _Inventory.FirstOrDefault(i => i.GameItem.ItemID == selectedGameItemQuantity.GameItem.ItemID);
+
+            if (gameItemQuantity != null)
             {
-                _backPackItems.Add(selectedGameItem);
+                if (selectedGameItemQuantity.Quantity == 1)
+                {
+                    _Inventory.Remove(gameItemQuantity);
+                }
+                else
+                {
+                    gameItemQuantity.Quantity--;
+                }
             }
+
+            UpdateInventoryCategories();
         }
 
-        public void RemoveGameItemFromInv(GameItem selectedGameItem)
+       public string WeaponName()
         {
-            if (selectedGameItem != null)
+            if (WeaponCarried != null)
             {
-                _backPackItems.Remove(selectedGameItem);
+                return $"{WeaponCarried.GameItem.ItemName}";
             }
+            else
+            {
+                return "";
+            }
+            
         }
+
 
         public override string DefaultGreeting()
         {
@@ -172,10 +222,12 @@ namespace TBQUESTGame.Models
             return _locationsVisited.Contains(location);
         }
 
-        public void BootyValueCalculate()
+        public void GoldValueCalculate()
         {
-            BootyValue = _booty.Sum(i => i.GameItem.CurrencyValue * i.Quantity);
+            BootyValue = _Inventory.Sum(i => i.GameItem.CurrencyValue * i.Quantity);
         }
+
         
+        #endregion
     }
 }

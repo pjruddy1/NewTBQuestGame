@@ -71,5 +71,15 @@ namespace TBQUESTGame.PresentationLayer
         {
             _gameSessionViewModel.RemoveItemFromInventory();
         }
+
+        private void EquipButton_Click_1(object sender, RoutedEventArgs e)
+        {
+            _gameSessionViewModel.EquipWeapon();
+        }
+
+        private void UseButton_Click_1(object sender, RoutedEventArgs e)
+        {
+            _gameSessionViewModel.UseGameItem();
+        }
     }
 }

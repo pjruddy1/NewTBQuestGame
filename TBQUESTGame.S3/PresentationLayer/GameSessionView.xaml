@@ -198,54 +198,40 @@
                                 Style="{StaticResource MainGameTextBox}"
                                 Text="{Binding CurrentLocation.Description}" Margin="17,0"/>
                         </StackPanel>
-                        <StackPanel
+                        <Grid
+                             Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2">
+                            <StackPanel
                             Grid.Row="1"
                             Grid.Column="0"
                             Grid.ColumnSpan="2">
-                            <TabControl 
-                            x:Name="LocationDataTabControl"
+                                <TabControl 
+                            x:Name="LocationDataTabControl"                                
                             Width="auto">
 
-                                <TabItem Header="Booty"
-                                x:Name="BootyTabItem">
-                                    <DataGrid 
-                                    x:Name="BootyDataGrid"
-                                    ItemsSource="{Binding CurrentLocation.Booty}"
-                                    SelectedItem="{Binding CurrentBootyItem}"
-                                    AutoGenerateColumns="False"
-                                    HeadersVisibility="Column">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Name"
-                                                Binding="{Binding GameItem.ItemName, Mode=OneWay}"
-                                                Width="*"/>
-                                            <DataGridTextColumn Header="Qty"
-                                                IsReadOnly="True"
-                                                Width="Auto"
-                                                Binding="{Binding Quantity, Mode=OneWay}"/>
-                                           
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </TabItem>
-
-                                <TabItem Header="Items"
+                                    <TabItem Header="Items"
                                 x:Name="ItemsTabItem">
-                                    <DataGrid 
+                                        <DataGrid 
                                     x:Name="ItemsDataGrid"
                                     ItemsSource="{Binding CurrentLocation.GameItems}"
                                     SelectedItem="{Binding CurrentGameItem}"
                                     AutoGenerateColumns="False"
-                                    HeadersVisibility="Column">
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Name"
+                                    HeadersVisibility="Column"
+                                        VerticalScrollBarVisibility="Auto">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Name"
                                                 Binding="{Binding GameItem.ItemName, Mode=OneWay}"
                                                 Width="*"/>
-                                            
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </TabItem>
 
-                            </TabControl>
-                        </StackPanel>                           
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </TabItem>
+
+                                </TabControl>
+                            </StackPanel>
+                        </Grid>
+                                                 
                     </Grid>
 
 
@@ -293,7 +279,7 @@
                         Grid.Column="0"
                         Style="{StaticResource IndividualLabelStyle}"
                         HorizontalAlignment="Right"
-                        Content="Booty"/>
+                        Content="Gold"/>
                         <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
@@ -306,10 +292,12 @@
                         HorizontalAlignment="Right"
                         Content="Weapon Carried"/>
                         <TextBox
+                            x:Name="CurrentWeapon"
                         Grid.Row="3"
                         Grid.Column="1"
+                            
                         Style="{StaticResource SpecificGameTextBox}"
-                        Text="{Binding Player.WeaponCarried}"/>
+                        Text="{Binding WeaponName}"/>
                         <Label                        
                         Grid.Row="4"
                         Grid.Column="0"
@@ -376,20 +364,15 @@
                             Height="35"
                             Margin="5"
                             Content="Pick UP"
-                            Visibility="{Binding IsCurrentGameItemSelected, Converter={StaticResource BooleanToVisibility}}" Click="PickUpButton_Click_1"
+                            Click="PickUpButton_Click_1"
                             />
-                                <Button                           
-                            Width="85"
-                            Height="35"
-                            Content="Drop Item"
-                            Visibility="{Binding IsCurrentInventoryGameItemSelected, Converter={StaticResource BooleanToVisibility}}" Click="DropButton_Click_1"
-                            />
+                               
                                 <Button                            
                             Width="85"
                             Height="35"
                             Margin="5"
                             Content="Use Item"
-                            Visibility="{Binding IsCurrentInventoryGameItemSelected, Converter={StaticResource BooleanToVisibility}}"
+                            
                             />
                             </StackPanel>
                             <Label
@@ -436,6 +419,29 @@
 
                     <Border
                         Style="{StaticResource InsideBorderStyle}" Width="275">
+                        <StackPanel>
+                            <StackPanel
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center">
+                                <Button                           
+                            Width="80"
+                            Height="30"
+                            Content="Drop Item"
+                            Click="DropButton_Click_1"
+                            />
+                                <Button                            
+                            Width="80"
+                            Height="30"
+                            Margin="5"
+                            Content="Use Item" Click="UseButton_Click_1"/>
+                                <Button                            
+                            Width="80"
+                            Height="30"
+                            Margin="5"
+                            Content="Equip" Click="EquipButton_Click_1"/>
+
+                            </StackPanel>
+                            
                         <TabControl 
                             x:Name="PlayerPackTabControl"
                             Width="auto">
@@ -447,10 +453,10 @@
                                     ItemsSource="{Binding Player.ActionItems}"
                                     SelectedItem="{Binding CurrentGameItem}"
                                     AutoGenerateColumns="False"
-                                    HeadersVisibility="Column" Height="223" VerticalAlignment="Bottom">
+                                    HeadersVisibility="Column" Height="auto" VerticalAlignment="Bottom">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name"
-                                                Binding="{Binding GameItems.ItemName, Mode=OneWay}"
+                                                Binding="{Binding GameItem.ItemName, Mode=OneWay}"
                                                 Width="*"/>
                                         <DataGridTextColumn Header="Description"
                                                 IsReadOnly="True"
@@ -470,12 +476,12 @@
                                     HeadersVisibility="Column">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Name"
-                                                Binding="{Binding GameItem.Name, Mode=OneWay}"
+                                                Binding="{Binding GameItem.ItemName, Mode=OneWay}"
                                                 Width="*"/>
                                         <DataGridTextColumn Header="Description"
                                                 IsReadOnly="True"
                                                 Width="1.25*"
-                                                Binding="{Binding GameItem.Description, Mode=OneWay}"/>
+                                                Binding="{Binding GameItem.ItemDescription, Mode=OneWay}"/>
                                         
                                     </DataGrid.Columns>
                                 </DataGrid>
@@ -485,7 +491,7 @@
                                 x:Name="PlayerBootyTabItem">
                                 <DataGrid 
                                     x:Name="TreasureDataGrid"
-                                    ItemsSource="{Binding Player.Purse}"
+                                    ItemsSource="{Binding Player.Booty}"
                                     SelectedItem="{Binding CurrentGameItem}"
                                     AutoGenerateColumns="False"
                                     HeadersVisibility="Column">
@@ -505,6 +511,7 @@
                             </TabItem>
 
                         </TabControl>
+                        </StackPanel>
                     </Border>
 
 

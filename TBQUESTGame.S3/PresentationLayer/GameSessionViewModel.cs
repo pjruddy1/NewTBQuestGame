@@ -27,10 +27,31 @@ namespace TBQUESTGame.PresentationLayer
         private string _currentLocationName;
         private Location _northLocation, _eastLocation, _southLocation, _westLocation;
         private string _nothLocationName, _eastLocationName, _southLocationName, _westLocationName;
-        private GameItem _currentGameItem;
+        private GameItemQuantity _currentGameItem;
+        private GameItemQuantity _currentInventoryItem;
         private GameItemQuantity _currentBootyItem;
+        private string _currentWeapon;
+        private ObservableCollection<GameItemQuantity> _playerBooty;
+        private string _weaponName;
 
-        
+        public string WeaponName
+        {
+            get { return _weaponName; }
+            set
+            {
+                OnPropertyChanged(nameof(WeaponName));
+                _weaponName = value;
+            }
+        }
+
+
+
+
+
+
+
+
+
 
 
         #endregion
@@ -80,7 +101,7 @@ namespace TBQUESTGame.PresentationLayer
                 _nothLocationName = NorthLocation.Name;
                 OnPropertyChanged(nameof(NorthLocationName));
             }
-        }
+        }        
 
         public string EastLocationName
         {
@@ -158,7 +179,7 @@ namespace TBQUESTGame.PresentationLayer
                 OnPropertyChanged(nameof(HasWestLocation));
             }
         }
-        public GameItem CurrentGameItem
+        public GameItemQuantity CurrentGameItem
         {
             get { return _currentGameItem; }
             set { _currentGameItem = value; }
@@ -167,6 +188,18 @@ namespace TBQUESTGame.PresentationLayer
         {
             get { return _currentBootyItem; }
             set { _currentBootyItem = value; }
+        }
+
+        public GameItemQuantity CurrentInventoryItem
+        {
+            get { return _currentInventoryItem; }
+            set { _currentInventoryItem = value; }
+        }
+
+        public ObservableCollection<GameItemQuantity> PlayerBooty
+        {
+            get { return _playerBooty; }
+            set { _playerBooty = value; }
         }
 
         public bool HasNorthLocation
@@ -184,7 +217,21 @@ namespace TBQUESTGame.PresentationLayer
             }
         }
 
-        
+        public string CurrentWeapon
+        {
+            get
+            {
+                _currentWeapon = _player.WeaponName();
+                return _currentWeapon;
+            }
+            set
+            {
+                _currentWeapon = value;
+                OnPropertyChanged(nameof(CurrentWeapon));
+            }
+        }
+
+
         //
         // shortened code with same functionality as above
         //
@@ -216,8 +263,9 @@ namespace TBQUESTGame.PresentationLayer
             Map gameMap,
             GameMapCoordinates currentLocationCoordinates)
         {
+            
             _player = player;
-
+            _weaponName = _player.WeaponName();
             _gameMap = gameMap;
             _gameMap.CurrentLocationCoordinates = currentLocationCoordinates;
             _currentLocation = _gameMap.CurrentLocation;
@@ -230,36 +278,38 @@ namespace TBQUESTGame.PresentationLayer
 
         #region METHODS
 
+        public void EquipWeapon()
+        {
+            GameItemQuantity selectedgameitem = _currentGameItem as GameItemQuantity;
+            
+            if (selectedgameitem.GameItem.ItemID < 200 && selectedgameitem.GameItem.ItemID > 100)
+            {
+                if (_player.WeaponCarried != null)
+                {
+                    _player.AddGameItemQuantityToInventory(_player.WeaponCarried);
+                }
+                _player.WeaponCarried = selectedgameitem;
+                _player.RemoveGameItemQuantityFromInventory(selectedgameitem);
+
+            }
+        }
+
         public void AddItemToInventory()
         {
-            //
-            // confirm a game item selected and is in current location
-            // subtract from location and add to inventory
-            //
+           
             if (_currentGameItem != null && _currentLocation.GameItems.Contains(_currentGameItem))
             {
                 //
                 // cast selected game item 
                 //
                
-                    GameItem selectedGameItem = _currentGameItem as GameItem;
+                    GameItemQuantity selectedGameItem = _currentGameItem as GameItemQuantity;
 
-                    _currentLocation.RemoveGameItemFromLocation(selectedGameItem);
-                    _player.AddGameItemToInv(selectedGameItem);
-                             
-
+                    _currentLocation.RemoveGameItemQuantityFromLocation(selectedGameItem);
+                    _player.AddGameItemQuantityToInventory(selectedGameItem);
+                    OnPlayerPickUp(selectedGameItem);
             }
-            else if(_currentBootyItem != null && _currentLocation.Booty.Contains(_currentBootyItem))
-            {
-                               
-                GameItemQuantity selectedGameItemQuantity = _currentBootyItem as GameItemQuantity;
-
-                _currentLocation.RemoveGameItemQuantityFromLocation(selectedGameItemQuantity);
-                _player.AddBootyToPurse(selectedGameItemQuantity);
-
-                OnPlayerPickUp(selectedGameItemQuantity);
-                
-            }
+            
         }
 
         public void RemoveItemFromInventory()
@@ -268,29 +318,63 @@ namespace TBQUESTGame.PresentationLayer
             // confirm a game item selected and is in inventory
             // subtract from inventory and add to location
             //
-            if (_currentGameItem != null && _currentLocation.GameItems.Contains(_currentGameItem))
+            if (_currentGameItem != null && _player.Inventory.Contains(_currentGameItem))
             {
                 //
                 // cast selected game item 
                 //
-                GameItem selectedgameitem = _currentGameItem as GameItem;
-                if(_currentLocation.Id == 3)
+                GameItemQuantity selectedgameitem = _currentGameItem as GameItemQuantity;
+                if (selectedgameitem.GameItem.ItemID < 200 || selectedgameitem.GameItem.ItemID > 300)
                 {
-                    _currentLocation.AddGameItemToLocation(selectedgameitem);
-                    _player.RemoveGameItemFromInv(selectedgameitem);
+                    if (_currentLocation.Id == 3)
+                    {
+                        _currentLocation.AddGameItemQuantityToLocation(selectedgameitem);
+                        _player.RemoveGameItemQuantityFromInventory(selectedgameitem);
+                    }
+                    else
+                    {
+                        _player.RemoveGameItemQuantityFromInventory(selectedgameitem);
+                    }
                 }
-                else
-                {
-                    _player.RemoveGameItemFromInv(selectedgameitem);
-                }             
 
             }
         }
 
         private void OnPlayerPickUp(GameItemQuantity gameItemQuantity)
-        {           
+        {
+           
             _player.BootyValue += gameItemQuantity.GameItem.CurrencyValue;
+
         }
+
+        ///
+        /// This is for purchasing items
+        /// Need to figure out how to remove certain Booty and then refactor the remaining price
+
+        //private void OnPlayerPurchase(GameItemQuantity gameItemQuantity, ObservableCollection<GameItemQuantity> currentBooty)
+        //{
+        //    GameItemQuantity selectedGameItem = _currentGameItem as GameItemQuantity;
+        //    int purchaseBalance = 0;
+
+        //    if (selectedGameItem.GameItem.ItemCost == 50 && _player.BootyValue == 50)
+        //    {
+        //        foreach (GameItemQuantity booty in currentBooty)
+        //        {
+        //            _player.Inventory.Remove(booty);
+        //        }
+        //    }
+        //    else if (true)
+        //    {
+        //        foreach (GameItemQuantity booty in currentBooty)
+        //        {
+        //            if (booty.GameItem.ItemID==)
+        //            {
+
+        //            }
+        //            _player.Inventory.Remove(booty);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// game time event, publishes every 1 second
@@ -443,6 +527,23 @@ namespace TBQUESTGame.PresentationLayer
             }
         }
 
+        public void UseGameItem()
+        {
+            GameItemQuantity selectedgameitem = _currentGameItem as GameItemQuantity;
+            if (selectedgameitem.GameItem.ItemID < 400 && selectedgameitem.GameItem.ItemID > 300)
+            {
+                _player.HitPoints += selectedgameitem.GameItem.HealthChange;
+                if (_player.HitPoints >=100)
+                {
+                    _player.Lives++;
+                    _player.HitPoints -= 100;
+                }
+                _player.RemoveGameItemQuantityFromInventory(_currentGameItem);
+            }
+        }
+
+       
+
         #region GAME TIME METHODS
 
         /// <summary>
@@ -471,12 +572,13 @@ namespace TBQUESTGame.PresentationLayer
         /// </summary>
         private void InitializeView()
         {
+            ObservableCollection<GameItemQuantity> currentBooty = new ObservableCollection<GameItemQuantity>();
+            currentBooty = _player.Booty;
             _gameStartTime = DateTime.Now;
             UpdateAvailableTravelPoints();
-            _player.UpdateBackPackItems();
-            _player.UpdatePurse();
-            _player.BootyValueCalculate();
-            
+            _player.UpdateInventoryCategories();
+            _player.GoldValueCalculate();
+            _player.WeaponName();
         }
 
         public void CloseScreen()

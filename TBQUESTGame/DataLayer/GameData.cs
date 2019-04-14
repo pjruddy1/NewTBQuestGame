@@ -12,6 +12,7 @@ namespace TBQUESTGame.DataLayer
     {
         public static Player PlayerData()
         {
+
             return new Player()
             {
                 Name = "PJ",
@@ -21,7 +22,7 @@ namespace TBQUESTGame.DataLayer
                 WeaponCarried = Player.Items.None,
                 ItemCarried = Player.Items.Rope,
                 ExpierencePnts = 0
-                
+
             };
         }
 
@@ -77,7 +78,7 @@ namespace TBQUESTGame.DataLayer
             //
             // row 2
             //
-                    
+
             gameMap.MapLocations[1, 0] = new Location()
             {
                 Id = 4,

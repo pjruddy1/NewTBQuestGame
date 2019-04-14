@@ -12,27 +12,27 @@ namespace TBQUESTGame.DataLayer
     {
         public static Player PlayerData()
         {
+
+            /// loading player without create player button
             return new Player()
             {
                 Name = "PJ",
                 HitPoints = 100,
                 Lives = 5,
                 Gold = 25,
-                WeaponCarried = Player.Items.None,
-                ItemCarried = Player.Items.None,
                 ExpierencePnts = 0,
-                Booty = new ObservableCollection<GameItemQuantity>
+                Inventory = new ObservableCollection<GameItemQuantity>
                 {
-                    new GameItemQuantity(GameItemById(203), 20)
-                },
-                Inventory = new ObservableCollection<GameItem>()
-                {
-                    GameItemById(304),
-                    GameItemById(305)
+                    new GameItemQuantity(GameItemById(203), 20),
+                    new GameItemQuantity(GameItemById(304), 1),
+                    new GameItemQuantity(GameItemById(305), 1),
+                    new GameItemQuantity(GameItemById(105), 1)
                 }
             };
         }
-
+        //
+        // Initial game Message
+        //
         public static List<string> InitialMessages()
         {
             return new List<string>()
@@ -42,7 +42,11 @@ namespace TBQUESTGame.DataLayer
                 "You will need to go from location to location to find out more about what happened to Sally and who is behind it."
             };
         }
-
+        /// <summary>
+        /// Creating Map and Locations
+        /// </summary>
+        /// <returns></returns>
+        #region
         public static GameMapCoordinates InitialGameMapLocation()
         {
             return new GameMapCoordinates() { Row = 1, Column = 1 };
@@ -66,18 +70,13 @@ namespace TBQUESTGame.DataLayer
                 "great night sleep.  On the otherside of the bed is a personal safe where you can store the majority of your belongings.",
                 Accessible = false,
                 ModifiyExperiencePoints = 10,
-                ImageName = "/media/palmsRoom.jpg",
-                ActionItemRequired = 301,
-                GameItems = new ObservableCollection<GameItem>
-                {
-                    GameItemById(304)
-                    
-                },
-                 Booty = new ObservableCollection<GameItemQuantity>
+                ImageName = "/media/palmsRoom.jpg",                
+                GameItems = new ObservableCollection<GameItemQuantity>
                 {
                     new GameItemQuantity(GameItemById(201), 3),
                     new GameItemQuantity(GameItemById(202), 5),
-                    new GameItemQuantity(GameItemById(203), 10)
+                    new GameItemQuantity(GameItemById(203), 10),
+                    new GameItemQuantity(GameItemById(304), 1)
                 }
             };
             gameMap.MapLocations[0, 1] = new Location()
@@ -92,9 +91,9 @@ namespace TBQUESTGame.DataLayer
                 Message = "\tThe cost of a room per night is 25 gold.",
                 
                 ImageName = "/media/palms.jpg",
-                GameItems = new ObservableCollection<GameItem>
+                GameItems = new ObservableCollection<GameItemQuantity>
                 {
-                    GameItemById(301)
+                    new GameItemQuantity(GameItemById(301),1)
                 }
             };
             //
@@ -110,18 +109,13 @@ namespace TBQUESTGame.DataLayer
                 Accessible = true,
                 ModifiyExperiencePoints = 10,
                 ImageName = "/media/palmBeach.jpg",
-                GameItems = new ObservableCollection<GameItem>
+               
+                GameItems = new ObservableCollection<GameItemQuantity>
                 {
-                    GameItemById(101),
-                    GameItemById(201),
-                    GameItemById(203),
-                    GameItemById(303),
-                },
-                Booty = new ObservableCollection<GameItemQuantity>
-                {
+                    new GameItemQuantity(GameItemById(101), 1),
                     new GameItemQuantity(GameItemById(201), 3),
                     new GameItemQuantity(GameItemById(202), 3),
-                    new GameItemQuantity(GameItemById(203), 7)
+                    new GameItemQuantity(GameItemById(303), 1)
                 }
             };
             gameMap.MapLocations[1, 1] = new Location()
@@ -145,12 +139,12 @@ namespace TBQUESTGame.DataLayer
                 ModifiyExperiencePoints = 10,
                 Message = "\tHere you can purchase tools, weapons, food, water and medical supplies.",
                 ImageName = "/media/market.jpg",
-                GameItems = new ObservableCollection<GameItem>
+                GameItems = new ObservableCollection<GameItemQuantity>
                 {
-                    GameItemById(102),
-                    GameItemById(103),
-                    GameItemById(104),
-                    GameItemById(304),
+                    new GameItemQuantity(GameItemById(102),1),
+                    new GameItemQuantity(GameItemById(103),1),
+                    new GameItemQuantity(GameItemById(104),1),
+                    new GameItemQuantity(GameItemById(304),1)
                 }
             };
             gameMap.MapLocations[1, 3] = new Location()
@@ -178,14 +172,10 @@ namespace TBQUESTGame.DataLayer
                 ModifyHealth = 0,
                 Message = "\tIf you decide to look around you may find some useful items.",
                 ImageName = "/media/emptyBeach.jpg",
-                GameItems = new ObservableCollection<GameItem>
+                
+                GameItems = new ObservableCollection<GameItemQuantity>
                 {
-                    GameItemById(101),
-                    GameItemById(202),
-                    GameItemById(203)
-                },
-                Booty = new ObservableCollection<GameItemQuantity>
-                {
+                    new GameItemQuantity(GameItemById(101), 1),                    
                     new GameItemQuantity(GameItemById(202), 3),
                     new GameItemQuantity(GameItemById(203), 7),
                 }
@@ -200,9 +190,9 @@ namespace TBQUESTGame.DataLayer
                 ModifiyExperiencePoints = 10,
                 Message = "\tIt would be a good idea to ask an officer to share any details of Sally's murder. Just becareful to not ask to many.",
                 ImageName = "/media/police.jpg",
-                GameItems = new ObservableCollection<GameItem>
+                GameItems = new ObservableCollection<GameItemQuantity>
                 {
-                    GameItemById(303)
+                    new GameItemQuantity(GameItemById(303),1)
                 }
             };
             gameMap.MapLocations[2, 2] = new Location()
@@ -211,14 +201,20 @@ namespace TBQUESTGame.DataLayer
                 Name = "San Mateo",
                 Description = "San Mateo Neighborhood is a tougher area of the island.  This is where most of the local gang activity is located.  In the last year there" +
                 "have been 10 known murders and several missing people.  There are barking dogs in every yard and almost every window is borded up with plywood",
-                Accessible = false,
+               
                 ModifiyExperiencePoints = 50,
-                RequiredExperiencePoints = 70,
                 Message = "\tIf you are not carrying a weapon in hand, you should either turn around or pull a weapon out.  Because you were not prepared you've lost" +
                 "a life",
                 ImageName = "/media/sanMateo.jpg",
-                ModifyLives = -1
-                
+                ModifyLives = -1,
+                WeaponRequired = new List<GameItem>
+                {
+                    WeaponRequiredId(101),
+                    WeaponRequiredId(102),
+                     WeaponRequiredId(103),
+                     WeaponRequiredId(104)                   
+                }
+
             };
             //
             //Row 4
@@ -237,23 +233,30 @@ namespace TBQUESTGame.DataLayer
 
             return gameMap;
         }
+        #endregion
 
+        /// <summary>
+        /// Creating game Items
+        /// </summary>
+        /// <returns></returns>
+        #region
         public static List<GameItem> GameItems()
         {
             return new List<GameItem>()
             {
-                new Weapon(101, "Bamboo Stick", "5 Feet Long with a pointy end", 50, 10, 5, 10, 5, 0 ),
-                new Weapon(102, "Bat", "Louisville Slugger", 75, 25, 10, 35, 7, 0 ),
-                new Weapon(103, "Machette", "3 Feet long with a tapped wooden handle ", 40, 10, 65, 45, 10, 0 ),
-                new Weapon(104, "Pistol", "Colt 45 with 6 Bullets", 60, 85, 45, 5, 0, 0),
-                new Currency(201, "Gold Coin", "Old Spanish Booty made of Gold", 100, 10, Currency.Booty.Gold),
-                new Currency(202, "Silver Coin", "Old Spanish Booty made of Silver", 100, 5, Currency.Booty.Silver),
-                new Currency(203, "Copper Coin", "Old Spanish Booty made of Copper", 100, 1, Currency.Booty.Copper),
-                new ActionItem(301, "Room Key", "Electronic Entry Room Key made of plastic", 75, ActionItem.ItemAction.OpenDoor, 0 ),
-                new ActionItem(302, "Rope", "30 Feet of nylon rope", 75,  ActionItem.ItemAction.TieUpCharacter, 0),
-                new ActionItem(303, "Hammer", "Old Hammer with a wooden handle", 65, ActionItem.ItemAction.Build, 0),
-                new ActionItem(304, "Medkit", "Medical Supplies", 10,  ActionItem.ItemAction.Heal, 0),
-                new ActionItem(305, "Lunch Box", "An Old Scooby Doo lunch box", 10,  ActionItem.ItemAction.None, 0)
+                new Weapon(101, "Bamboo Stick", "5 Feet Long with a pointy end", 50, 10, 5, 10, 5, 0, 0 ,0),
+                new Weapon(102, "Bat", "Louisville Slugger", 75, 25, 10, 35, 7, 0 , 0, 10),
+                new Weapon(103, "Machette", "3 Feet long with a tapped wooden handle ", 40, 10, 65, 45, 10, 0 , 0, 20),
+                new Weapon(104, "Pistol", "Colt 45 with 6 Bullets", 60, 85, 45, 5, 0, 0, 0, 50),
+                new Weapon(105, "Pocket Knife", "Granpa's Old Pocket Knife", 30, 5, 0, 5, 0, 0, 0, 0),
+                new Currency(201, "Gold Coin", "Old Spanish Booty made of Gold", 100, 10, Currency.Booty.Gold, 0, 0),
+                new Currency(202, "Silver Coin", "Old Spanish Booty made of Silver", 100, 5, Currency.Booty.Silver, 0 , 0),
+                new Currency(203, "Copper Coin", "Old Spanish Booty made of Copper", 100, 1, Currency.Booty.Copper, 0 , 0),
+                new ActionItem(301, "Key", "Electronic Entry Room Key made of plastic", 75, ActionItem.ItemAction.OpenDoor, 0, 0, 25 ),
+                new ActionItem(302, "Rope", "30 Feet of nylon rope", 75,  ActionItem.ItemAction.TieUpCharacter, 0, 0, 0),
+                new ActionItem(303, "Hammer", "Old Hammer with a wooden handle", 65, ActionItem.ItemAction.Build, 0, 0, 0),
+                new ActionItem(304, "Medkit", "Medical Supplies", 10,  ActionItem.ItemAction.Heal, 0, 55, 25),
+                new ActionItem(305, "Lunch Box", "An Old Scooby Doo lunch box", 10,  ActionItem.ItemAction.None, 0, 33, 0)
             };
         }
 
@@ -262,124 +265,10 @@ namespace TBQUESTGame.DataLayer
             return GameItems().FirstOrDefault(i => i.ItemID == id);
         }
 
-
-        //public static Location InitialGameMapLocaiton()
-        //{
-        //    return new Location()
-        //    {
-        //        ID = 4,
-        //        Name = "San Pedro Airport",
-        //        Description = "The San Pedro Airport is located close to the center of San Pedro Island. This is the main source of travel to Belize City. ",
-        //        Accessibble = true,
-        //    };
-        //}
-
-        //public static Map GameMapData()
-        //{
-        //    Map gameMap = new Map();
-
-        //    ObservableCollection<Location> locations = new ObservableCollection<Location>()
-        //    {              
-
-        //        //
-        //        // row 1
-        //        //
-        //       new Location()
-        //        {
-        //            ID = 4,
-        //        Name = "San Pedro Airport",
-        //        Description = "The San Pedro Airport is located close to the center of San Pedro Island. This is the main source of travel to Belize City. ",
-        //        Accessibble = true,
-        //        ModifiyExperiencePoints = 0
-        //        },
-
-        //       new Location()
-        //        {
-        //            ID = 10,
-        //            Name = "Secret Beach",
-        //            Description = "Secret Beach is located in the north east corner of the island.  It's a beautiful remote location with several palm trees and soft white sand." +
-        //            "There is also a restaurant and bar next to the beach.",
-        //            Accessibble = true,
-        //            ModifiyExperiencePoints = 10
-        //        },
-
-        //       new Location()
-        //        {
-        //            ID = 7,
-        //            Name = "The Palms",
-        //            Description = "The Palms is a beautiful beach side resort with excellecnt accomidations.  Each room includes a king-size bed and a personal safe to keep belongings." +
-        //            "Loacated in the main lobby is complimentary food and beverages.",
-        //            Accessibble = true,
-        //            ModifiyExperiencePoints = 10
-        //        },
-
-        //       new Location()
-        //        {
-        //            ID = 8,
-        //            Name = "Police Department",
-        //            Description = "San Pedro Police Department is located close to the center of the island.  The police force is made up of local men and it's rummored " +
-        //            "that police are in the hands of polaticians and some of the local gangs",
-        //            Accessibble = true,
-        //            ModifiyExperiencePoints = 10
-        //        }
-
-        //    };
-        //    gameMap.Locations = locations;
-
-
-        //
-        // row 2
-        //
-        //gameMap.MapLocations[1, 1] = new Location()
-        //{
-        //    Id = 2,
-        //    Name = "Felandrian Plains",
-        //    Description = "The Felandrian Plains are a common destination for tourist. Located just north of the " +
-        //    "equatorial line on the planet of Corlon, they provide excellent habitat for a rich ecosystem of flora and fauna.",
-        //    Accessible = true,
-        //    ModifiyExperiencePoints = 10
-        //};
-        //gameMap.MapLocations[1, 2] = new Location()
-        //{
-        //    Id = 2,
-        //    Name = "Epitoria's Reading Room",
-        //    Description = "Queen Epitoria, the Torian Monarh of the 5th Dynasty, was know for her passion for " +
-        //    "galactic history. The room has a tall vaulted ceiling, open in the middle  with four floors of wrapping " +
-        //    "balconies filled with scrolls, texts, and infocrystals. As you enter the room a red fog desends from the ceiling " +
-        //    "and you begin feeling your life energy slip away slowly until you are dead.",
-        //    Accessible = false,
-        //    ModifiyExperiencePoints = 50,
-        //    ModifyLives = -1,
-        //    RequiredExperiencePoints = 40
-        //};
-
-        ////
-        //// row 3
-        ////
-        //gameMap.MapLocations[2, 0] = new Location()
-        //{
-        //    Id = 3,
-        //    Name = "Xantoria Market",
-        //    Description = "The Xantoria market, once controlled by the Thorian elite, is now an open market managed " +
-        //    "by the Xantorian Commerce Coop. It is a place where many races from various systems trade goods." +
-        //    "You purchase a blue potion in a thin, clear flask, drink it and receive 50 points of health.",
-        //    Accessible = false,
-        //    ModifiyExperiencePoints = 20,
-        //    ModifyHealth = 50,
-        //    Message = "Traveler, our telemetry places you at the Xantoria Market. We have reports of local health potions."
-        //};
-        //gameMap.MapLocations[2, 1] = new Location()
-        //{
-        //    Id = 4,
-        //    Name = "The Tamfasia Galactic Academy",
-        //    Description = "The Tamfasia Galactic Academy was founded in the early 4th galactic metachron. " +
-        //    "You are currently in the library, standing next to the protoplasmic encabulator that stores all " +
-        //    "recorded information of the galactic history.",
-        //    Accessible = true,
-        //    ModifiyExperiencePoints = 10
-        //};
-
-        //return gameMap;
-        //}
+        private static GameItem WeaponRequiredId(int id)
+        {
+            return GameItems().FirstOrDefault(i => i.ItemID == id);
+        }
+        #endregion
     }
 }

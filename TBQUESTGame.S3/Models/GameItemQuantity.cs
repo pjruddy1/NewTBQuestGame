@@ -8,9 +8,12 @@ namespace TBQUESTGame.Models
 {
     public class GameItemQuantity
     {
+        #region properties
         public GameItem GameItem { get; set; }
         public int Quantity { get; set; }
+        #endregion
 
+        #region Constructors
         public GameItemQuantity()
         {
 
@@ -21,5 +24,6 @@ namespace TBQUESTGame.Models
             GameItem = gameItem;
             Quantity = quantity;
         }
+        #endregion
     }
 }

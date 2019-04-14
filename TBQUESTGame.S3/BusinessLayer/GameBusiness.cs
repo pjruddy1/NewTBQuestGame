@@ -45,8 +45,7 @@ namespace TBQUESTGame.BusinessLayer
                 _player.HitPoints = 100;
                 _player.Lives = 5;
                 _player.ExpierencePnts = 0;
-                _player.Gold = 50;
-                _player.ItemCarried = Character.Items.Rope;
+                _player.Gold = 50;               
             }
             else
             {
