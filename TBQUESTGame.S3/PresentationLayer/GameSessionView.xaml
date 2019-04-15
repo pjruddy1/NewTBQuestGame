@@ -221,7 +221,7 @@
                                         VerticalScrollBarVisibility="Auto">
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Header="Name"
-                                                Binding="{Binding GameItem.ItemName, Mode=OneWay}"
+                                                Binding="{Binding GameItem.ItemInfo, Mode=OneWay}"
                                                 Width="*"/>
 
                                             </DataGrid.Columns>
@@ -294,10 +294,9 @@
                         <TextBox
                             x:Name="CurrentWeapon"
                         Grid.Row="3"
-                        Grid.Column="1"
-                            
+                        Grid.Column="1"                            
                         Style="{StaticResource SpecificGameTextBox}"
-                        Text="{Binding WeaponName}"/>
+                        Text="{Binding Player.CurrentWeapon}"/>
                         <Label                        
                         Grid.Row="4"
                         Grid.Column="0"
@@ -308,7 +307,7 @@
                         Grid.Row="4"
                         Grid.Column="1"
                         Style="{StaticResource SpecificGameTextBox}"
-                        Text="{Binding Player.ItemCarried}"/>
+                        Text="{Binding Player.CurrentItem}"/>
                         <Label                        
                         Grid.Row="5"
                         Grid.Column="0"
@@ -458,7 +457,7 @@
                                         <DataGridTextColumn Header="Name"
                                                 Binding="{Binding GameItem.ItemName, Mode=OneWay}"
                                                 Width="*"/>
-                                        <DataGridTextColumn Header="Description"
+                                            <DataGridTextColumn Header="itemDescription"
                                                 IsReadOnly="True"
                                                 Width="1.25*"
                                                 Binding="{Binding GameItem.Description, Mode=OneWay}"/>

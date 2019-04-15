@@ -29,7 +29,7 @@ namespace TBQUESTGame.Models
         private ObservableCollection<GameItemQuantity> _gameItems;
         private ObservableCollection<GameItemQuantity> _booty;
         private List<GameItem> _weaponRequired;
-        private GameItemQuantity _actionItemRequired;
+        private int _actionItemRequired;
 
        
 
@@ -88,7 +88,7 @@ namespace TBQUESTGame.Models
             set { _modifyLives = value; }
         }
 
-        public GameItemQuantity ActionItemRequired
+        public int ActionItemRequired
         {
             get { return _actionItemRequired; }
             set { _actionItemRequired = value; }

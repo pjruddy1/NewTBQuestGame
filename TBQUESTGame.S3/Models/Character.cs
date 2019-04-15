@@ -12,8 +12,16 @@ namespace TBQUESTGame.Models
         protected string _name;
         protected int _hitPoints;
         protected int _gold;
-        protected string _itemCarried;
+        protected string _currentItem;
         protected int _locationID;
+        private GameItemQuantity _itemCarried;
+
+        public GameItemQuantity ItemCarried
+        {
+            get { return _itemCarried; }
+            set { _itemCarried = value; }
+        }
+
         #endregion
 
         #region Properties
@@ -23,13 +31,15 @@ namespace TBQUESTGame.Models
             set { _locationID = value; }
         }        
 
-        public string ItemCarried
+        public string CurrentItem
         {
-            get { return _itemCarried; }
-            set { _itemCarried = value; }
-        }
-
-        
+            get { return _currentItem; }
+            set
+            {
+                _currentItem = value;
+                OnPropertyChanged(nameof(CurrentItem));
+            }
+        }        
 
         public int Gold
         {
@@ -73,7 +83,24 @@ namespace TBQUESTGame.Models
             return $"Hello, my name is {Name}";
         }
 
-       
+        public string ReturnItemCarried()
+        {
+            if (ItemCarried != null)
+            {
+                return $"{ItemCarried.GameItem.ItemName}";
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public string UpdateItem()
+        {
+            ItemCarried = null;
+            return "";
+        }
+
         #endregion
     }
 }

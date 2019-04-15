@@ -22,19 +22,11 @@ namespace TBQUESTGame.Models
         private GameItemQuantity _weaponCarried;
         private string _currentWeapon;
 
+
         public string CurrentWeapon
         {
             get
-            {
-                if (WeaponCarried != null)
-                {
-                    _currentWeapon = WeaponCarried.GameItem.ItemName;
-                }
-                else
-                {
-                    _currentWeapon = "";
-                }
-                
+            {                
                 return _currentWeapon;
             }
             set
@@ -151,6 +143,7 @@ namespace TBQUESTGame.Models
             }
         }
 
+        
 
         public void AddGameItemQuantityToInventory(GameItemQuantity selectedGameItemQuantity)
         {
@@ -228,6 +221,8 @@ namespace TBQUESTGame.Models
         }
 
         
+
+
         #endregion
     }
 }

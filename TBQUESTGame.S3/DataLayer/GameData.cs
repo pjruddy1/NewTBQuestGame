@@ -69,6 +69,7 @@ namespace TBQUESTGame.DataLayer
                 Description = "You walk into your room.  The airconditioner is keeping the room at a perfect temperature.  Right in front is a king-size bed, which would make for a " +
                 "great night sleep.  On the otherside of the bed is a personal safe where you can store the majority of your belongings.",
                 Accessible = false,
+                ActionItemRequired = 301,
                 ModifiyExperiencePoints = 10,
                 ImageName = "/media/palmsRoom.jpg",                
                 GameItems = new ObservableCollection<GameItemQuantity>

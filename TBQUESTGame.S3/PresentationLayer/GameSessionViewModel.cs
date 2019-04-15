@@ -32,27 +32,7 @@ namespace TBQUESTGame.PresentationLayer
         private GameItemQuantity _currentBootyItem;
         private string _currentWeapon;
         private ObservableCollection<GameItemQuantity> _playerBooty;
-        private string _weaponName;
-
-        public string WeaponName
-        {
-            get { return _weaponName; }
-            set
-            {
-                OnPropertyChanged(nameof(WeaponName));
-                _weaponName = value;
-            }
-        }
-
-
-
-
-
-
-
-
-
-
+        
 
         #endregion
 
@@ -219,11 +199,7 @@ namespace TBQUESTGame.PresentationLayer
 
         public string CurrentWeapon
         {
-            get
-            {
-                _currentWeapon = _player.WeaponName();
-                return _currentWeapon;
-            }
+            get{ return _currentWeapon; }
             set
             {
                 _currentWeapon = value;
@@ -265,7 +241,6 @@ namespace TBQUESTGame.PresentationLayer
         {
             
             _player = player;
-            _weaponName = _player.WeaponName();
             _gameMap = gameMap;
             _gameMap.CurrentLocationCoordinates = currentLocationCoordinates;
             _currentLocation = _gameMap.CurrentLocation;
@@ -281,17 +256,34 @@ namespace TBQUESTGame.PresentationLayer
         public void EquipWeapon()
         {
             GameItemQuantity selectedgameitem = _currentGameItem as GameItemQuantity;
-            
-            if (selectedgameitem.GameItem.ItemID < 200 && selectedgameitem.GameItem.ItemID > 100)
-            {
-                if (_player.WeaponCarried != null)
-                {
-                    _player.AddGameItemQuantityToInventory(_player.WeaponCarried);
-                }
-                _player.WeaponCarried = selectedgameitem;
-                _player.RemoveGameItemQuantityFromInventory(selectedgameitem);
 
+            if (_currentGameItem != null)
+            {
+                
+
+                if (selectedgameitem.GameItem.ItemID < 200 && selectedgameitem.GameItem.ItemID > 100)
+                {
+                    if (_player.WeaponCarried != null)
+                    {
+                        _player.AddGameItemQuantityToInventory(_player.WeaponCarried);
+                    }
+                    _player.WeaponCarried = selectedgameitem;
+                    _player.RemoveGameItemQuantityFromInventory(selectedgameitem);
+                    _player.CurrentWeapon = _player.WeaponName();
+                }
+                else if (selectedgameitem.GameItem.ItemID > 300 && selectedgameitem.GameItem.ItemID < 400)
+                {
+                    if (_player.ItemCarried != null)
+                    {
+                        _player.AddGameItemQuantityToInventory(_player.ItemCarried);
+                    }
+                    _player.ItemCarried = selectedgameitem;
+                    _player.RemoveGameItemQuantityFromInventory(selectedgameitem);
+                    _player.CurrentItem = _player.ReturnItemCarried();
+                }
+                _currentGameItem = null;
             }
+            
         }
 
         public void AddItemToInventory()
@@ -391,6 +383,7 @@ namespace TBQUESTGame.PresentationLayer
         /// calculate the available travel points from current location
         /// game slipstreams are a mapping against the 2D array where 
         /// </summary>
+        
         private void UpdateAvailableTravelPoints()
         {
             //
@@ -401,28 +394,72 @@ namespace TBQUESTGame.PresentationLayer
             SouthLocation = null;
             WestLocation = null;
 
+            //
+            // north location exists
+            //
             if (_gameMap.NorthLocation(_player) != null)
             {
-                NorthLocation = _gameMap.NorthLocation(_player);
-                NorthLocationName = _gameMap.NorthLocationName(_player);
+                Location nextNorthLocation = _gameMap.NorthLocation(_player);
+
+                //
+                // location generally accessible or player has required conditions
+                //
+                if (nextNorthLocation.Accessible == true )
+                {
+                    NorthLocation = _gameMap.NorthLocation(_player);
+                    NorthLocationName = _gameMap.NorthLocationName(_player);
+                }
             }
 
+            //
+            // east location exists
+            //
             if (_gameMap.EastLocation(_player) != null)
             {
-                EastLocation = _gameMap.EastLocation(_player);
-                EastLocationName = _gameMap.EastLocationName(_player);
+                Location nextEastLocation = _gameMap.EastLocation(_player);
+
+                //
+                // location generally accessible or player has required conditions
+                //
+                if (nextEastLocation.Accessible == true )
+                {
+                    EastLocation = _gameMap.EastLocation(_player);
+                    EastLocationName = _gameMap.EastLocationName(_player);
+                }
             }
 
+            //
+            // south location exists
+            //
             if (_gameMap.SouthLocation(_player) != null)
             {
-                SouthLocation = _gameMap.SouthLocation(_player);
-                SouthLocationName = _gameMap.SouthLocationName(_player);
+                Location nextSouthLocation = _gameMap.SouthLocation(_player);
+
+                //
+                // location generally accessible or player has required conditions
+                //
+                if (nextSouthLocation.Accessible == true )
+                {
+                    SouthLocation = _gameMap.SouthLocation(_player);
+                    SouthLocationName = _gameMap.SouthLocationName(_player);
+                }
             }
 
+            //
+            // west location exists
+            //
             if (_gameMap.WestLocation(_player) != null)
             {
-                WestLocation = _gameMap.WestLocation(_player);
-                WestLocationName = _gameMap.WestLocationName(_player);
+                Location nextWestLocation = _gameMap.WestLocation(_player);
+
+                //
+                // location generally accessible or player has required conditions
+                //
+                if (nextWestLocation.Accessible == true)
+                {
+                    WestLocation = _gameMap.WestLocation(_player);
+                    WestLocationName = _gameMap.WestLocationName(_player);
+                }
             }
         }
 
@@ -530,16 +567,43 @@ namespace TBQUESTGame.PresentationLayer
         public void UseGameItem()
         {
             GameItemQuantity selectedgameitem = _currentGameItem as GameItemQuantity;
-            if (selectedgameitem.GameItem.ItemID < 400 && selectedgameitem.GameItem.ItemID > 300)
+            if (_player.ItemCarried != null)
             {
-                _player.HitPoints += selectedgameitem.GameItem.HealthChange;
-                if (_player.HitPoints >=100)
+                selectedgameitem = _player.ItemCarried;
+
+                if (selectedgameitem.GameItem.ItemID < 400 && selectedgameitem.GameItem.ItemID > 300)
                 {
-                    _player.Lives++;
-                    _player.HitPoints -= 100;
+                    if (selectedgameitem.GameItem.ItemID == 301)
+                    {
+                        _gameMap.UpdateLocationAccesible(_player);
+                        UpdateAvailableTravelPoints();
+                    }
+                    _player.HitPoints += selectedgameitem.GameItem.HealthChange;
+                    if (_player.HitPoints >= 100)
+                    {
+                        _player.Lives++;
+                        _player.HitPoints -= 100;
+                    }
+                    
+                    _player.CurrentItem = _player.UpdateItem();
                 }
-                _player.RemoveGameItemQuantityFromInventory(_currentGameItem);
             }
+            else if (_currentGameItem != null)
+            {
+                if (selectedgameitem.GameItem.ItemID < 400 && selectedgameitem.GameItem.ItemID > 300)
+                {
+                    _player.HitPoints += selectedgameitem.GameItem.HealthChange;
+                    if (_player.HitPoints >= 100)
+                    {
+                        _player.Lives++;
+                        _player.HitPoints -= 100;
+                    }
+                    _player.RemoveGameItemQuantityFromInventory(_currentGameItem);
+                    _player.CurrentWeapon = _player.ReturnItemCarried();
+                }
+            }
+
+           
         }
 
        
@@ -579,6 +643,7 @@ namespace TBQUESTGame.PresentationLayer
             _player.UpdateInventoryCategories();
             _player.GoldValueCalculate();
             _player.WeaponName();
+            _player.ReturnItemCarried();
         }
 
         public void CloseScreen()

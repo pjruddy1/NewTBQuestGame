@@ -310,6 +310,30 @@ namespace TBQUESTGame.Models
             return StandardGameItems.FirstOrDefault(i => i.ItemID == gameItemId);
         }
 
+        public void UpdateLocationAccesible(Player player)
+        {
+
+            Location westLocation = null;
+
+            //
+            // not on west border
+            //
+            if (_currentLocationCoordinates.Column > 0)
+            {
+                Location nextWestLocation = _mapLocations[_currentLocationCoordinates.Row, _currentLocationCoordinates.Column - 1];
+
+                //
+                // location exists and player can access location
+                //
+                if (nextWestLocation != null )
+                {
+                    nextWestLocation.Accessible = true;
+                    westLocation = nextWestLocation;
+                }
+            }
+           
+        }
+
         #endregion
     }
 }
