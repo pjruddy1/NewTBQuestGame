@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBQUESTGame", "TBQUESTGame\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBQUESTGame.S3", "TBQUESTGame.S3\TBQUESTGame.S3.csproj", "{ACBA2705-A191-432D-99F0-FDBE36E2CD36}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TBQUESTGame.S4.1", "TBQUESTGame.S4.1\TBQUESTGame.S4.1.csproj", "{629EE3ED-C49B-4374-BFEC-09A17DD73795}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{ACBA2705-A191-432D-99F0-FDBE36E2CD36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACBA2705-A191-432D-99F0-FDBE36E2CD36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACBA2705-A191-432D-99F0-FDBE36E2CD36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{629EE3ED-C49B-4374-BFEC-09A17DD73795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{629EE3ED-C49B-4374-BFEC-09A17DD73795}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{629EE3ED-C49B-4374-BFEC-09A17DD73795}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{629EE3ED-C49B-4374-BFEC-09A17DD73795}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
